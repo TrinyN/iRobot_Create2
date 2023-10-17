@@ -1,14 +1,17 @@
 """
-Author: Triny Nguyen
-Written: 10/5/23
-Last Updated: 10/17/23
+Author:             Triny Nguyen and Ethan Scott
+Date Created:       10/5/2023
+Last Editted:       10/17/2023
 
-Description: creates a Robot object and uses the methods in the Robot 
-class to get the roomba to travel in a "square" 
+Purpose:            This code works to make the robot move around a 4ft x 4ft square 
+                    on the class floor, marked by tape. The code uses the Robot.py class
+                    to import all of the necessary methods related to passing
+                    commands (and possible packet IDs) to the 
 
-Sample Run: C:\\Users\\User>python Project3.py
+Sample Input:       C:\\Users\\User>python Project3.py
 
-Sample Output: Connected!
+Sample Output:      Connected!
+                    Then followed by the movement of the Create 2.
 """
 
 import sys
