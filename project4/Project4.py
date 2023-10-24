@@ -17,9 +17,9 @@ import keyboard
 import threading
 from Robot import Robot
 
-# robot = Robot("COM11")
-# robot.start()
-# robot.safe()
+robot = Robot("COM11")
+robot.start()
+robot.safe()
 
 root = Tk()  # create a root widget
 root.title("Roomba")
@@ -61,12 +61,16 @@ canvas.create_image(770,440,image=roombaPic_N)
 #######LED Buttons######
 def LED(color):
     if color == "green":
+        robot.leds(b'\x04',b'\x00',b'\xFF')
         print("green")
     elif color == "yellow":
+        robot.leds(b'\x04',b'\x5F',b'\xFF')
         print("yellow")
     elif color == "orange":
+        robot.leds(b'\x04',b'\xBF',b'\xFF')
         print("orange")
     elif color == "red":
+        robot.leds(b'\x04',b'\xFF',b'\xFF')
         print("red")
     else:
         print("error")
