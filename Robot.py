@@ -216,5 +216,86 @@ class Robot:
 	def playHappyBirthday(self):
 		"""Method that allows the user to play the Happy Birthday Song.
 		"""
-		create2Project2 # Placeholder, i dont know if this works
+		
+		C_LOW = b"\x48"
+		A = b"\x51"
+		A_SHARP = b"\x52"
+		B = b"\x53"
+		C = b"\x54"
+		D = b"\x4A"
+		E = b"\x4C"
+		F = b"\x4D"
+		G = b"\x4F"
+
+		QUARTER_NOTE = b"\x30"
+
+		HALF_NOTE = b"\x60"
+
+		QUARTER_BEAM = b"\x18"
+
+		VERSE_ONE = (
+			b"\x8C\x01\x0C"
+			+ C_LOW
+			+ QUARTER_BEAM
+			+ C_LOW
+			+ QUARTER_BEAM
+			+ D
+			+ QUARTER_NOTE
+			+ C_LOW
+			+ QUARTER_NOTE
+			+ F
+			+ QUARTER_NOTE
+			+ E
+			+ HALF_NOTE
+			+ C_LOW
+			+ QUARTER_BEAM
+			+ C_LOW
+			+ QUARTER_BEAM
+			+ D
+			+ QUARTER_NOTE
+			+ C_LOW
+			+ QUARTER_NOTE
+			+ G
+			+ QUARTER_NOTE
+			+ F
+			+ HALF_NOTE
+		)
+
+		VERSE_TWO = (
+			b"\x8C\x02\x0D"
+			+ C_LOW
+			+ QUARTER_BEAM
+			+ C_LOW
+			+ QUARTER_BEAM
+			+ C
+			+ QUARTER_NOTE
+			+ A
+			+ QUARTER_NOTE
+			+ F
+			+ QUARTER_NOTE
+			+ E
+			+ QUARTER_NOTE
+			+ D
+			+ HALF_NOTE
+			+ A_SHARP
+			+ QUARTER_BEAM
+			+ A_SHARP
+			+ QUARTER_BEAM
+			+ A
+			+ QUARTER_NOTE
+			+ F
+			+ QUARTER_NOTE
+			+ G
+			+ QUARTER_NOTE
+			+ F
+			+ HALF_NOTE
+		)
+		self.sendCommand(VERSE_ONE)
+		time.sleep(1.0)
+		self.sendCommand(VERSE_TWO)
+
+
+		self.sendCommand(b"\x8D\x01")
+		time.sleep(9.5)
+		self.sendCommand(b"\x8D\x02")
 
