@@ -258,14 +258,29 @@ def handle_enter_key_press(event):
     input_text = four_digit_input.get()[:4]  # gets the first 4 characters
     print("Enter key pressed. Input:", input_text) 
 
-    digit1 = input_text[0]
-    digit2 = input_text[1]
-    digit3 = input_text[2]
-    digit4 = input_text[3]
 
 # if first 4 characters are all numbers, display LED
     if re.search(r'\d{4}', input_text):
-        robot.digitLEDsASCII(digit4 + 48, digit3 + 48, digit2 + 48, digit1 + 48)
+
+        # Convert the digits to integers
+        digit1 = int(digit1)
+        digit2 = int(digit2)
+        digit3 = int(digit3)
+        digit4 = int(digit4)
+
+        # Convert the integers to hexadecimal
+        hex1 = hex(digit1 + 48)
+        hex2 = hex(digit2 + 48)
+        hex3 = hex(digit3 + 48)
+        hex4 = hex(digit4 + 48)
+
+        # Convert the hexadecimal to bytes
+        num1 = bytes([int(hex1, 16)])
+        num2 = bytes([int(hex2, 16)])
+        num3 = bytes([int(hex3, 16)])
+        num4 = bytes([int(hex4, 16)])
+
+        robot.digitLEDsASCII(num4, num3, num2, num1)
     else:
         print("Invalid Input")
 
