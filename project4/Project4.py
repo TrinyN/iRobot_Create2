@@ -254,6 +254,21 @@ def handle_keyboard_input():
                 print("Stop!")
 
 ########## digits W.I.P. #############
+def handle_enter_key_press(event):
+    input_text = four_digit_input.get()[:4]  # gets the first 4 characters
+    print("Enter key pressed. Input:", input_text) 
+
+    digit1 = input_text[0]
+    digit2 = input_text[1]
+    digit3 = input_text[2]
+    digit4 = input_text[3]
+
+# if first 4 characters are all numbers, display LED
+    if re.search(r'\d{4}', input_text):
+        robot.digitLEDsASCII(digit4 + 48, digit3 + 48, digit2 + 48, digit1 + 48)
+    else:
+        print("Invalid Input")
+
 # Create a frame to surround the 4 digit input
 four_digit_frame = Frame(root, bg="white", width=400, height=100)  # Adjust width and height as needed
 four_digit_frame.place(x = 30, y = 250)
@@ -262,9 +277,7 @@ four_digit_frame.place(x = 30, y = 250)
 four_digit_input = Entry(four_digit_frame, width=4, font=("Georgia", 30), bg="black", fg="white", insertbackground="white")
 four_digit_input.pack(side=LEFT, padx=10)
 
-keyboard_thread = threading.Thread(target=handle_keyboard_input)
-keyboard_thread.start()
-
+four_digit_input.bind("<Return>", handle_enter_key_press)
 ######################################
 
 keyboard_thread = threading.Thread(target=handle_keyboard_input)
