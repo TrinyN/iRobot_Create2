@@ -163,7 +163,7 @@ def handle_keyboard_input():
         ):
             if not W:
                 W = True
-                #robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
+                robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Driving Forward...")
@@ -179,7 +179,7 @@ def handle_keyboard_input():
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_S)
                 print("Driving Backwards...")
-                #robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
+                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
 
 
 
@@ -250,9 +250,22 @@ def handle_keyboard_input():
                 D = False
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
-                #robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
+                robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
                 print("Stop!")
 
+########## digits W.I.P. #############
+# Create a frame to surround the 4 digit input
+four_digit_frame = Frame(root, bg="white", width=400, height=100)  # Adjust width and height as needed
+four_digit_frame.place(x = 30, y = 250)
+
+# Create an entry box to take in input
+four_digit_input = Entry(four_digit_frame, width=4, font=("Georgia", 30))
+four_digit_input.pack(side=LEFT, padx=10)
+
+keyboard_thread = threading.Thread(target=handle_keyboard_input)
+keyboard_thread.start()
+
+######################################
 
 keyboard_thread = threading.Thread(target=handle_keyboard_input)
 keyboard_thread.start()
