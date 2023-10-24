@@ -137,6 +137,15 @@ def handle_keyboard_input():
             if not W:
                 W = True
                 # handle_input('W')
+                robot.start()
+                robot.safe()
+                # robot.driveDirect(b'x00', b'xC8', b'x00', b'xC8')
+                robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
+
+                # connection.write(b'\x80\x83')
+                # time.sleep(0.5)
+                # connection.write(DRIVE_FORWARD_200)
+
                 print("Driving Forward...")
 
         elif (
@@ -149,6 +158,17 @@ def handle_keyboard_input():
                 S = True
                 # handle_input('S')
                 print("Driving Backwards...")
+                robot.start()
+                robot.safe()
+                # robot.drive(b'xFF', b'x38', b'x7F', b'xFF')
+                # robot.driveDirect(b'xFF', b'x38', b'xFF', b'x38')
+                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
+
+                # connection.write(b'\x80\x83')
+                # time.sleep(0.5)
+                # connection.write(DRIVE_BACKWARDS_200)
+
+
 
         elif (
             keyboard.is_pressed("a")
@@ -207,11 +227,16 @@ def handle_keyboard_input():
                 D = False
 
                 # handle_input("null")
+                # robot.driveDirect(b'x00', b'x00', b'x00', b'x00')
+                # DRIVE_ONE_WHEEL_200 = b'\x86'
+                robot.stop()
+                # connection.write(b'\xAD')
                 print("Stop!")
 
 
 keyboard_thread = threading.Thread(target=handle_keyboard_input)
 keyboard_thread.start()
+
 
 ################################## keys ###################
 
