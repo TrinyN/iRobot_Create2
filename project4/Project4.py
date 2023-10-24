@@ -148,17 +148,37 @@ D = FALSE
 #     else:
 #         print("stop!")
 
+def handle_input(key):
+    if key == 'W':
+        print("Driving Forward...")
+    elif key == 'A':
+        print("Driving Left...")
+
+    elif key == 'S':
+        print("Driving Backwards...")
+
+    elif key == 'D':
+        print("Driving Right...")
+
+    elif key == " ":
+        print("Stop!")
+
+W = FALSE
+A = FALSE
+S = FALSE
+D = FALSE
+
 def handle_keyboard_input():
     global W, A, S, D
-    
+    # ADD ARROWS
     # add caps version?
     # add buttons pressed
     while True:
         if (
-            keyboard.is_pressed("w")
-            and not keyboard.is_pressed("a")
-            and not keyboard.is_pressed("d")
-            and not keyboard.is_pressed("s")
+            keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")
+            and not (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
+            and not (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
+            and not (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
 
         ):
             if not W:
@@ -169,25 +189,23 @@ def handle_keyboard_input():
                 print("Driving Forward...")
 
         elif (
-            keyboard.is_pressed("s")
-            and not keyboard.is_pressed("a")
-            and not keyboard.is_pressed("d")
-            and not keyboard.is_pressed("w")
+            keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")
+            and not (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
+            and not (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
+            and not (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
         ):
             if not S:
                 S = True
+                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_S)
                 print("Driving Backwards...")
-                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
-
-
 
         elif (
-            keyboard.is_pressed("a")
-            and not keyboard.is_pressed("w")
-            and not keyboard.is_pressed("s")
-            and not keyboard.is_pressed("d")
+            keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")
+            and not (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
+            and not (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
+            and not (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
         ):
             if not A:
                 A = True
@@ -196,10 +214,10 @@ def handle_keyboard_input():
                 print("Driving Left...")
 
         elif (
-            keyboard.is_pressed("d")
-            and not keyboard.is_pressed("w")
-            and not keyboard.is_pressed("s")
-            and not keyboard.is_pressed("a")
+            keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")
+            and not (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
+            and not (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
+            and not (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
         ):
             if not D:
                 D = True
@@ -207,7 +225,7 @@ def handle_keyboard_input():
                 canvas.create_image(770,440,image=roombaPic_E)
                 print("Driving Right...")
 
-        elif keyboard.is_pressed("w") and keyboard.is_pressed("a"):
+        elif (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")):
             if not W or not A:
                 W = True
                 A = True
@@ -215,7 +233,7 @@ def handle_keyboard_input():
                 canvas.create_image(770,440,image=roombaPic_NW)
                 print("W and A Driving...")
 
-        elif keyboard.is_pressed("w") and keyboard.is_pressed("d"):
+        elif (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")):
             if not W or not D:
                 W = True
                 D = True
@@ -223,7 +241,7 @@ def handle_keyboard_input():
                 canvas.create_image(770,440,image=roombaPic_NE)
                 print("W and D Driving...")
 
-        elif keyboard.is_pressed("s") and keyboard.is_pressed("a"):
+        elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")):
             if not S or not A:
                 S = True
                 A = True
@@ -231,7 +249,7 @@ def handle_keyboard_input():
                 canvas.create_image(770,440,image=roombaPic_SW)
                 print("S and A Driving...")
 
-        elif keyboard.is_pressed("s") and keyboard.is_pressed("d"):
+        elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")):
             if not S or not D:
                 S = True
                 D = True
@@ -248,9 +266,9 @@ def handle_keyboard_input():
                 A = False
                 S = False
                 D = False
+                robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
-                robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
                 print("Stop!")
 
 ########## digits W.I.P. #############
