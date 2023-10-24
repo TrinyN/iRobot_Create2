@@ -13,6 +13,7 @@ Sample Output:  	Connected!
 import struct
 import serial
 import time
+# import create2Project2
 
 class Robot:
 	"""Class of Robot that includes all related and relevant methods
@@ -30,31 +31,33 @@ class Robot:
 	reset_cmd					=  b'\x07'
 	stop_cmd					=  b'\xAD'
 	buttons_cmd					=  b'\xA5'
-	drive_direct_cmd			=  b'\x91'
+	drive_direct_cmd				=  b'\x91'
 	drive_cmd					=  b'\x89'
-	leds_ascii_cmd				=  b'\xA4'
+	leds_ascii_cmd					=  b'\xA4'
 	leds_cmd					=  b'\x8B'
-	seek_dock_cmd				=  b'\x8F'
+	seek_dock_cmd					=  b'\x8F'
+	song_load_cmd					=  b'\x8C'
+	song_play_cmd					=  b'\x8D'
 
 	# Packet ID HEX byte definitions
-	wall_id						=  b'\x08'
+	wall_id					=  b'\x08'
 	bumpsAndWheels_id			=  b'\x07'
 	cliffLeft_id				=  b'\x09'
 	cliffFrontLeft_id			=  b'\x0A'
 	cliffFrontRight_id			=  b'\x0B'
 	cliffRight_id				=  b'\x0C'
 	virtualWall_id				=  b'\x0D'
-	buttons_id					=  b'\x12'
-	distance_id					=  b'\x13'
-	angle_id					=  b'\x14'
+	buttons_id				=  b'\x12'
+	distance_id				=  b'\x13'
+	angle_id				=  b'\x14'
 	chargingState_id			=  b'\x15'
-	voltage_id					=  b'\x16'
+	voltage_id				=  b'\x16'
 	temperature_id				=  b'\x18'
 	batteryCharge_id			=  b'\x19'
 	wallSignal_id				=  b'\x1B'
 	cliffLeftSignal_id			=  b'\x1C'
-	cliffFrontLeftSignal_id		=  b'\x1D'
-	cliffFrontRightSignal_id	=  b'\x1E'
+	cliffFrontLeftSignal_id			=  b'\x1D'
+	cliffFrontRightSignal_id		=  b'\x1E'
 	cliffRightSignal_id			=  b'\x1F'
 	
 	
@@ -198,3 +201,20 @@ class Robot:
 		"""
 		self.sendCommand(self.leds_ascii_cmd + \
 			digit3 + digit2 + digit1 + digit0)
+
+	def playNote(self, songNumber, noteByte, noteLengthByte):
+		"""Method that allows the user to play a single note.
+
+		Args:
+			songNumber (bytes): 			Number of song
+			noteByte (bytes): 				Note pitch
+			noteLengthByte (bytes):			Note length
+		"""
+		self.sendCommand(self.song_load_cmd + songNumber + 'b\x00' + \
+			noteByte + noteLengthByte)
+		
+	def playHappyBirthday(self):
+		"""Method that allows the user to play the Happy Birthday Song.
+		"""
+		create2Project2 # Placeholder, i dont know if this works
+
