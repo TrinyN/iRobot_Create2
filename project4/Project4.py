@@ -33,6 +33,41 @@ imgpath = 'C:/Users/escot/Downloads/create2sm.png'
 roombaPic = PhotoImage(file=imgpath)
 canvas.create_image(770,440,image=roombaPic)
 
+#######LED Buttons######
+def LED(color):
+    if color == "green":
+        print("green")
+    elif color == "yellow":
+        print("yellow")
+    elif color == "orange":
+        print("orange")
+    elif color == "red":
+        print("red")
+    else:
+        print("error")
+
+# Create a frame to surround the color buttons
+color_frame = Frame(root, bg="white", width=400, height=100)  # Adjust width and height as needed
+color_frame.place(x = 30, y = 30)
+
+
+text = Label(color_frame, text="Clean/Power LED", pady = 5, bg="white", font=("Georgia", 16))
+text.pack()
+
+LED_GREEN = Button(color_frame, bg="green", text="    ", command=partial(LED, "green"))
+LED_YELLOW = Button(color_frame, bg="yellow", text="    ", command=partial(LED, "yellow"))
+LED_ORANGE = Button(color_frame, bg="orange", text="    ", command=partial(LED, "orange"))
+LED_RED = Button(color_frame, bg="red", text="    ", command=partial(LED, "red"))
+
+LED_GREEN.pack(side=LEFT, padx=10)
+LED_YELLOW.pack(side=LEFT, padx=10)
+LED_ORANGE.pack(side=RIGHT, padx=10)
+LED_RED.pack(side=RIGHT, padx=10)
+
+# Create a frame to surround the wasd buttons
+wasd_frame = Frame(root, bg="white", width=400, height=100)  # Adjust width and height as needed
+wasd_frame.place(x = 30, y = 640)
+
 ################################## keys ###################
 
 def on_press(key):
