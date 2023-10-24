@@ -17,9 +17,9 @@ import keyboard
 import threading
 from Robot import Robot
 
-robot = Robot("COM11")
-robot.start()
-robot.safe()
+# robot = Robot("COM11")
+# robot.start()
+# robot.safe()
 
 root = Tk()  # create a root widget
 root.title("Roomba")
@@ -159,13 +159,8 @@ def handle_keyboard_input():
         ):
             if not W:
                 W = True
-                # handle_input('W')
-                # robot.driveDirect(b'x00', b'xC8', b'x00', b'xC8')
-                robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
-
-                # connection.write(b'\x80\x83')
-                # time.sleep(0.5)
-                # connection.write(DRIVE_FORWARD_200)
+                #robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Driving Forward...")
 
@@ -177,15 +172,10 @@ def handle_keyboard_input():
         ):
             if not S:
                 S = True
-                # handle_input('S')
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_S)
                 print("Driving Backwards...")
-                # robot.drive(b'xFF', b'x38', b'x7F', b'xFF')
-                # robot.driveDirect(b'xFF', b'x38', b'xFF', b'x38')
-                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
-                # connection.write(b'\x80\x83')
-                # time.sleep(0.5)
-                # connection.write(DRIVE_BACKWARDS_200)
+                #robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
 
 
 
@@ -197,9 +187,8 @@ def handle_keyboard_input():
         ):
             if not A:
                 A = True
-                # handle_input('A')
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_W)
-
                 print("Driving Left...")
 
         elif (
@@ -210,7 +199,7 @@ def handle_keyboard_input():
         ):
             if not D:
                 D = True
-                # handle_input('D')
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_E)
                 print("Driving Right...")
 
@@ -218,6 +207,7 @@ def handle_keyboard_input():
             if not W or not A:
                 W = True
                 A = True
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NW)
                 print("W and A Driving...")
 
@@ -225,6 +215,7 @@ def handle_keyboard_input():
             if not W or not D:
                 W = True
                 D = True
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NE)
                 print("W and D Driving...")
 
@@ -232,6 +223,7 @@ def handle_keyboard_input():
             if not S or not A:
                 S = True
                 A = True
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_SW)
                 print("S and A Driving...")
 
@@ -239,6 +231,7 @@ def handle_keyboard_input():
             if not S or not D:
                 S = True
                 D = True
+                canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_SE)
                 print("S and D Driving...")
 
@@ -251,12 +244,9 @@ def handle_keyboard_input():
                 A = False
                 S = False
                 D = False
-
-                # handle_input("null")
-                robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
-                # DRIVE_ONE_WHEEL_200 = b'\x86'
-                # robot.stop()
-                # connection.write(b'\xAD')
+                canvas.delete(canvas.find_closest(770,440))
+                canvas.create_image(770,440,image=roombaPic_N)
+                #robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
                 print("Stop!")
 
 
