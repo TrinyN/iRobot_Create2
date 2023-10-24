@@ -15,6 +15,10 @@ from pynput import keyboard
 import keyboard
 import threading
 
+robot = Robot("COM5")
+robot.start()
+robot.safe()
+
 root = Tk()  # create a root widget
 root.title("Roomba")
 root.configure(background="white")
