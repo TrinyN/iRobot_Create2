@@ -259,7 +259,7 @@ four_digit_frame = Frame(root, bg="white", width=400, height=100)  # Adjust widt
 four_digit_frame.place(x = 30, y = 250)
 
 # Create an entry box to take in input
-four_digit_input = Entry(four_digit_frame, width=4, font=("Georgia", 30))
+four_digit_input = Entry(four_digit_frame, width=4, font=("Georgia", 30), bg="black", fg="white", insertbackground="white")
 four_digit_input.pack(side=LEFT, padx=10)
 
 keyboard_thread = threading.Thread(target=handle_keyboard_input)
