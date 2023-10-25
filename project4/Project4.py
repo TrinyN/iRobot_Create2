@@ -21,6 +21,7 @@ import threading
 from PIL import Image, ImageTk
 import keyboard
 from Robot import Robot
+import re
 
 # Establish connection and prime robot
 robot = Robot("COM11")
