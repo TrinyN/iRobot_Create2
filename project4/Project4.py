@@ -117,23 +117,6 @@ wasd_frame.place(x = 30, y = 640)
 wasd_frame = Frame(root, bg="white", width=400, height=100)  # Adjust parameters as needed
 wasd_frame.place(x = 30, y = 640)
 
-W = FALSE
-A = FALSE
-S = FALSE
-D = FALSE
-
-# def handle_w_button_press():
-#     global W
-#     W = True
-
-# def handle_w_button_release():
-#     global W
-#     W = False
-
-# w_button = Button(wasd_frame, text="W", command=handle_w_button_press, width=6, height=3)
-# w_button.bind('<ButtonRelease-1>', lambda event: handle_w_button_release())
-    
-
 # Create buttons with text labels
 w_button = Button(wasd_frame, text="W", command=lambda: handle_input('W'), width=6, height=3)
 a_button = Button(wasd_frame, text="A", command=lambda: handle_input('A'), width=6, height=3)
