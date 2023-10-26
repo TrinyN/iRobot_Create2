@@ -365,7 +365,7 @@ boost_button_frame = Frame(root, bg="white", width=400, height=100)
 boost_button_frame.place(x=1430, y=670)
 
 # Load the play button icon image
-boost_icon_image = PhotoImage(file="boostIcon3.png")
+boost_icon_image = PhotoImage(file="boostIcon.png")
 
 # Create the play button using the image
 boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white", command=play_music)
