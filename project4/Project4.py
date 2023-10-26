@@ -3,16 +3,16 @@ Author:             Triny Nguyen and Ethan Scott
 Date Created:       10/19/2023
 Last Editted:       10/  /2023
 
-Purpose:            ...
+Purpose:            This file includes all of the code to create a window that a user
+                    will be able to use to control the robot, including driving it,
+                    changing its LED light color(s), changing its ASCII LED,
+                    and more.
 
-Sample Run:         ...
+Sample Run:         c:/Users/escot/vscode-workspace/Project4.py
 
-Sample Output:      ...
-
-# tkinter
-# creating listeners that looks whether a button is pressed; code based on these
-...
-
+Sample Output:      Connected!
+                    yellow
+                    Driving Forward...
 """
 import tkinter
 from tkinter import *
@@ -22,6 +22,8 @@ from PIL import Image, ImageTk
 import keyboard
 from Robot import Robot
 import re
+
+################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
 robot = Robot("COM9")
@@ -34,7 +36,7 @@ root.title("Roomba")
 root.configure(background="white")
 root.minsize(1920, 1080)                                # Minimum width and height
 root.maxsize(1920, 1080)
-root.geometry("1920x1080+0+0")                          # Set actual width x height and starting point
+root.geometry("1920x1080+0+0")                          # Setting width, height, and starting point
 root.resizable=FALSE
 root.state('zoomed')                                    # Automatically set to fullscreen
 
@@ -56,7 +58,7 @@ pil_roombaPic_SW = pil_roombaPic_N.rotate(225)
 pil_roombaPic_W = pil_roombaPic_N.rotate(270)
 pil_roombaPic_NW = pil_roombaPic_N.rotate(315)
 
-roombaPic_N = ImageTk.PhotoImage(pil_roombaPic_N)       # Convert all pillow images to PhotoImage's
+roombaPic_N = ImageTk.PhotoImage(pil_roombaPic_N)       # Convert all pillow images to PhotoImages
 roombaPic_NE = ImageTk.PhotoImage(pil_roombaPic_NW)
 roombaPic_E = ImageTk.PhotoImage(pil_roombaPic_W)
 roombaPic_SE = ImageTk.PhotoImage(pil_roombaPic_SW)
@@ -67,7 +69,9 @@ roombaPic_NW = ImageTk.PhotoImage(pil_roombaPic_NE)
 
 canvas.create_image(770,440,image=roombaPic_N)          # Placing the default image on the canvas
 
-#######LED Buttons######
+############################################### End ################################################
+
+########################################## LED Buttons #############################################
 def LED(color):
     """Method that handles users choosing one of the different color options
     and will change the robot's central LED accordingly.
@@ -109,20 +113,31 @@ LED_YELLOW.pack(side=LEFT, padx=10)
 LED_ORANGE.pack(side=LEFT, padx=10)
 LED_RED.pack(side=RIGHT, padx=10)
 
-############WASD########
-# Create a frame to surround the wasd buttons
-wasd_frame = Frame(root, bg="white", width=400, height=100)  # Adjust parameters as needed
-wasd_frame.place(x = 30, y = 640)
+############################################### End ################################################
+
+######################################### Movement Keys ############################################
 
 # Create a frame to surround the wasd buttons
 wasd_frame = Frame(root, bg="white", width=400, height=100)  # Adjust parameters as needed
 wasd_frame.place(x = 30, y = 640)
+
+# Create a frame to hold the boost button
+boost_button_frame = Frame(root, bg="white", width=400, height=100)
+boost_button_frame.place(x=1430, y=670)
+
+# Load the boost button icon image
+boost_icon_image = PhotoImage(file="boostIcon.png")
 
 # Create buttons with text labels
 w_button = Button(wasd_frame, text="W", command=lambda: handle_input('W'), width=6, height=3)
 a_button = Button(wasd_frame, text="A", command=lambda: handle_input('A'), width=6, height=3)
 s_button = Button(wasd_frame, text="S", command=lambda: handle_input('S'), width=6, height=3)
 d_button = Button(wasd_frame, text="D", command=lambda: handle_input('D'), width=6, height=3)
+boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white",
+                      command=lambda: handle_input(' '))
+
+# Create the boost button using the image
+boost_button.pack()
 
 # Position buttons to resemble a keyboard layout
 w_button.grid(row=0, column=1, padx=10)
@@ -138,28 +153,32 @@ def handle_input(key):
         key (str):                      Key chosen on-screen
     """
     if key == 'W':
-        robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
+        robot.driveDirect(b'\x01', b'\2C', b'\x01', b'\x2C')
         canvas.delete(canvas.find_closest(770,440))
         canvas.create_image(770,440,image=roombaPic_N)
         print("Driving Forward...")
     elif key == 'S':
-        robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
+        robot.driveDirect(b'\xFF', b'\x38', b'\xFF', b'\x38')
         canvas.delete(canvas.find_closest(770,440))
         canvas.create_image(770,440,image=roombaPic_S)
         print("Driving Backwards...")
     elif key == 'A':
-        robot.driveDirect(b'\x00', b'\x64', b'\xFF', b'\x9C') # rotate counter-clockwise
+        robot.driveDirect(b'\x00', b'\xC8', b'\xFF', b'\x38') # Rotate counter-clockwise
         canvas.delete(canvas.find_closest(770,440))
         canvas.create_image(770,440,image=roombaPic_W)
-
-        print("Driving Left...")
+        print("Turning Left...")
     elif key == 'D':
-        robot.driveDirect(b'\xFF', b'\x9C', b'\x00', b'\x64') # rotate clockwise
+        robot.driveDirect(b'\xFF', b'\x38', b'\x00', b'\xC8') # Rotate clockwise
         canvas.delete(canvas.find_closest(770,440))
         canvas.create_image(770,440,image=roombaPic_E)
+        print("Turning Right...")
 
     elif key == " ":
-        print("Stop!")
+        robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
+        # robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+        canvas.delete(canvas.find_closest(770,440))
+        canvas.create_image(770,440,image=roombaPic_N)
+        print("Boosting!")
 
 W = FALSE
 A = FALSE
@@ -174,9 +193,6 @@ def handle_keyboard_input():
             the user may now choose to move two directions at once, if they allow.
     """
     global W, A, S, D, SPACE
-    # ADD ARROWS
-    # add caps version?
-    # add buttons pressed
     while True:
         # Driving forwards
         if (
@@ -187,7 +203,7 @@ def handle_keyboard_input():
         ):
             if not W:
                 W = True
-                robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\x64')
+                robot.driveDirect(b'\x01', b'\2C', b'\x01', b'\x2C')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Driving Forward...")
@@ -201,7 +217,7 @@ def handle_keyboard_input():
         ):
             if not S:
                 S = True
-                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\xC0')
+                robot.driveDirect(b'\xFF', b'\x38', b'\xFF', b'\x38')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_S)
                 print("Driving Backwards...")
@@ -215,7 +231,7 @@ def handle_keyboard_input():
         ):
             if not A:
                 A = True
-                robot.driveDirect(b'\x00', b'\x64', b'\xFF', b'\x9C')
+                robot.driveDirect(b'\x00', b'\xC8', b'\xFF', b'\x38')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_W)
                 print("Driving Left...")
@@ -229,7 +245,7 @@ def handle_keyboard_input():
         ):
             if not D:
                 D = True
-                robot.driveDirect(b'\xFF', b'\x9C', b'\x00', b'\x64')
+                robot.driveDirect(b'\xFF', b'\x38', b'\x00', b'\xC8')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_E)
                 print("Driving Right...")
@@ -240,7 +256,7 @@ def handle_keyboard_input():
             if not W or not A:
                 W = True
                 A = True
-                robot.driveDirect(b'\x00', b'\xA4', b'\x00', b'\x64')
+                robot.driveDirect(b'\x01', b'\x5E', b'\x00', b'\xFA')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NW)
                 print("W and A Driving...")
@@ -251,7 +267,7 @@ def handle_keyboard_input():
             if not W or not D:
                 W = True
                 D = True
-                robot.driveDirect(b'\x00', b'\x64', b'\x00', b'\xA4')
+                robot.driveDirect(b'\x00', b'\xFA', b'\x01', b'\x5E')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NE)
                 print("W and D Driving...")
@@ -262,7 +278,7 @@ def handle_keyboard_input():
             if not S or not A:
                 S = True
                 A = True
-                robot.driveDirect(b'\xFF', b'\x51', b'\xFF', b'\xC0')
+                robot.driveDirect(b'\xFE', b'\xA2', b'\xFF', b'\x06')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_SW)
                 print("S and A Driving...")
@@ -273,19 +289,21 @@ def handle_keyboard_input():
             if not S or not D:
                 S = True
                 D = True
-                robot.driveDirect(b'\xFF', b'\xC0', b'\xFF', b'\x51')
+                robot.driveDirect(b'\xFF', b'\x06', b'\xFE', b'\xA2')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_SE)
                 print("S and D Driving...")
 
-        # 
+        # Boosting forwards
         elif keyboard.is_pressed(" "):
-                    if not SPACE:
-                        SPACE = True
-                        robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
-                        canvas.delete(canvas.find_closest(770,440))
-                        canvas.create_image(770,440,image=roombaPic_N)
-                        print("Boost Driving...")
+            if not SPACE:
+                SPACE = True
+                robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
+                # robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+                canvas.delete(canvas.find_closest(770,440))
+                canvas.create_image(770,440,image=roombaPic_N)
+                print("Boosting...")
+
         # Finished with keyboard inputs
         elif keyboard.is_pressed("esc"):
             break
@@ -301,25 +319,29 @@ def handle_keyboard_input():
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Stop!")
 
-########## digits W.I.P. #############
+keyboard_thread = threading.Thread(target=handle_keyboard_input)
+keyboard_thread.start()
+
+############################################### End ################################################
+
+########################################### ASCII Digits ###########################################
 def handle_enter_key_press(event):
-    """_summary_
+    """Method to track when the user presses enter to choose
+        the AASCII LED digits they want. It uses the first four.
 
     Args:
-        event (_type_): _description_
+        event (str):                    The enter key
     """
     input_text = four_digit_input.get()[:4]                 # Gets the first 4 characters
     print("Enter key pressed. Input:", input_text)
 
-
-# If the first 4 characters are all numbers, display LED
+    # If the first 4 characters are all numbers, display LED
     if re.search(r'\d{4}', input_text):
         # Convert the digits to integers
         digit1 = int(input_text[0])
         digit2 = int(input_text[1])
         digit3 = int(input_text[2])
         digit4 = int(input_text[3])
-
 
         # Convert the integers to hexadecimal
         hex1 = hex(digit1 + 48)
@@ -343,17 +365,18 @@ four_digit_frame.place(x = 30, y = 250)
 
 # Create an entry box to take in input
 four_digit_input = Entry(four_digit_frame, width=4, font=("Georgia", 30), \
-                         bg="black", fg="white", insertbackground="white")
+                        bg="black", fg="white", insertbackground="white")
 four_digit_input.pack(side=LEFT, padx=10)
 
 four_digit_input.bind("<Return>", handle_enter_key_press)
-######################################
 
-keyboard_thread = threading.Thread(target=handle_keyboard_input)
-keyboard_thread.start()
+############################################### End ################################################
 
-################MUSIC##################
+############################################## Music ###############################################
 def play_music():
+    """Method to play the music used within in the Robot class. In our case that
+        is the Happy Birthday song.
+    """
     robot.playHappyBirthday()
 
 # Create a frame to hold the play button
@@ -367,34 +390,8 @@ play_icon_image = PhotoImage(file="playButton.png")
 play_button = Button(play_button_frame, image=play_icon_image, bg="white", command=play_music)
 play_button.pack()
 
-################BOOST BUTTON###############
-def boost():
-    robot.driveDirect(b'x00', b'x00', b'x00', b'x00')
-
-# Create a frame to hold the play button
-boost_button_frame = Frame(root, bg="white", width=400, height=100)
-boost_button_frame.place(x=1430, y=670)
-
-# Load the play button icon image
-boost_icon_image = PhotoImage(file="boostIcon.png")
-
-# Create the play button using the image
-boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white", command=boost)
-boost_button.pack()
-
-################BRAKE BUTTON###############
-def stop():
-    robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
-
-# Create a frame to hold the play button
-brake_button_frame = Frame(root, bg="white", width=400, height=100)
-brake_button_frame.place(x=1200, y=670)
-
-# Load the play button icon image
-brake_icon_image = PhotoImage(file="brakeIcon.png")
-
-# Create the play button using the image
-brake_button = Button(brake_button_frame, image=brake_icon_image, bg="white", command=stop)
-brake_button.pack()
+############################################### End ################################################
 
 root.mainloop()
+
+############################################ End Class #############################################
