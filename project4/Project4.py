@@ -358,6 +358,17 @@ play_icon_image = PhotoImage(file="playButton.png")
 play_button = Button(play_button_frame, image=play_icon_image, bg="white", command=play_music)
 play_button.pack()
 
-######################################
+################BOOST BUTTON###############
+
+# Create a frame to hold the play button
+boost_button_frame = Frame(root, bg="white", width=400, height=100)
+boost_button_frame.place(x=1430, y=670)
+
+# Load the play button icon image
+boost_icon_image = PhotoImage(file="boostIcon3.png")
+
+# Create the play button using the image
+boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white", command=play_music)
+boost_button.pack()
 
 root.mainloop()
