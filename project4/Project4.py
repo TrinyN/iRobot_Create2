@@ -24,7 +24,7 @@ from Robot import Robot
 import re
 
 # Establish connection and prime robot
-robot = Robot("COM11")
+robot = Robot("COM9")
 robot.start()
 robot.safe()
 
@@ -79,10 +79,10 @@ def LED(color):
         robot.leds(b'\x04',b'\x00',b'\xFF')
         print("green")
     elif color == "yellow":
-        robot.leds(b'\x04',b'\x5F',b'\xFF')
+        robot.leds(b'\x04',b'\x05',b'\xFF')
         print("yellow")
     elif color == "orange":
-        robot.leds(b'\x04',b'\xBF',b'\xFF')
+        robot.leds(b'\x04',b'\x30',b'\xFF')
         print("orange")
     elif color == "red":
         robot.leds(b'\x04',b'\xFF',b'\xFF')
@@ -106,7 +106,7 @@ LED_RED = Button(color_frame, bg="red", text="    ", command=partial(LED, "red")
 
 LED_GREEN.pack(side=LEFT, padx=10)
 LED_YELLOW.pack(side=LEFT, padx=10)
-LED_ORANGE.pack(side=RIGHT, padx=10)
+LED_ORANGE.pack(side=LEFT, padx=10)
 LED_RED.pack(side=RIGHT, padx=10)
 
 ############WASD########
@@ -165,6 +165,7 @@ W = FALSE
 A = FALSE
 S = FALSE
 D = FALSE
+SPACE = FALSE
 
 def handle_keyboard_input():
     """Method that handles user's inputs of movement through the keyboard. The imported
@@ -172,7 +173,7 @@ def handle_keyboard_input():
         NOTE: There is more freedom of movement in using the keyboard. Specifically,
             the user may now choose to move two directions at once, if they allow.
     """
-    global W, A, S, D
+    global W, A, S, D, SPACE
     # ADD ARROWS
     # add caps version?
     # add buttons pressed
@@ -277,6 +278,14 @@ def handle_keyboard_input():
                 canvas.create_image(770,440,image=roombaPic_SE)
                 print("S and D Driving...")
 
+        # 
+        elif keyboard.is_pressed(" "):
+                    if not SPACE:
+                        SPACE = True
+                        robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+                        canvas.delete(canvas.find_closest(770,440))
+                        canvas.create_image(770,440,image=roombaPic_N)
+                        print("Boost Driving...")
         # Finished with keyboard inputs
         elif keyboard.is_pressed("esc"):
             break
@@ -305,12 +314,12 @@ def handle_enter_key_press(event):
 
 # If the first 4 characters are all numbers, display LED
     if re.search(r'\d{4}', input_text):
-
         # Convert the digits to integers
-        digit1 = int(digit1)
-        digit2 = int(digit2)
-        digit3 = int(digit3)
-        digit4 = int(digit4)
+        digit1 = int(input_text[0])
+        digit2 = int(input_text[1])
+        digit3 = int(input_text[2])
+        digit4 = int(input_text[3])
+
 
         # Convert the integers to hexadecimal
         hex1 = hex(digit1 + 48)
@@ -324,7 +333,7 @@ def handle_enter_key_press(event):
         num3 = bytes([int(hex3, 16)])
         num4 = bytes([int(hex4, 16)])
 
-        robot.digitLEDsASCII(num4, num3, num2, num1)
+        robot.digitLEDsASCII(num1, num2, num3, num4)
     else:
         print("Invalid Input")
 
