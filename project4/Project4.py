@@ -368,6 +368,8 @@ play_button = Button(play_button_frame, image=play_icon_image, bg="white", comma
 play_button.pack()
 
 ################BOOST BUTTON###############
+def boost():
+    robot.driveDirect(b'x00', b'x00', b'x00', b'x00')
 
 # Create a frame to hold the play button
 boost_button_frame = Frame(root, bg="white", width=400, height=100)
@@ -377,7 +379,22 @@ boost_button_frame.place(x=1430, y=670)
 boost_icon_image = PhotoImage(file="boostIcon.png")
 
 # Create the play button using the image
-boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white", command=play_music)
+boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white", command=boost)
 boost_button.pack()
+
+################BRAKE BUTTON###############
+def stop():
+    robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
+
+# Create a frame to hold the play button
+brake_button_frame = Frame(root, bg="white", width=400, height=100)
+brake_button_frame.place(x=1200, y=670)
+
+# Load the play button icon image
+brake_icon_image = PhotoImage(file="brakeIcon.png")
+
+# Create the play button using the image
+brake_button = Button(brake_button_frame, image=brake_icon_image, bg="white", command=stop)
+brake_button.pack()
 
 root.mainloop()
