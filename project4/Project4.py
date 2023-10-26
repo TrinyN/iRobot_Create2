@@ -398,6 +398,8 @@ play_button.pack()
 ############################################## Brake ###############################################
 
 def stop():
+    """Method to set the speed of the wheels to 0 in order to stop moving.
+    """
     robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
 
 # Create a frame to hold the play button
