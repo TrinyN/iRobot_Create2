@@ -45,7 +45,7 @@ canvas_frame = Frame(root)
 canvas_frame.pack()
 
 # Create a canvas for the .png image (allows transparent background)
-canvas = Canvas(canvas_frame, bg="purple", width=1920, height=1080)
+canvas = Canvas(canvas_frame, bg="white", width=1920, height=1080)
 canvas.pack()
 
 # Creating images at different angles
@@ -133,8 +133,7 @@ w_button = Button(wasd_frame, text="W", command=lambda: handle_input('W'), width
 a_button = Button(wasd_frame, text="A", command=lambda: handle_input('A'), width=6, height=3)
 s_button = Button(wasd_frame, text="S", command=lambda: handle_input('S'), width=6, height=3)
 d_button = Button(wasd_frame, text="D", command=lambda: handle_input('D'), width=6, height=3)
-boost_button = Button(boost_button_frame, image=boost_icon_image, bg="white",
-                      command=lambda: handle_input(' '))
+boost_button = Button(boost_button_frame, image=boost_icon_image, command=lambda: handle_input(' '))
 
 # Create the boost button using the image
 boost_button.pack()
@@ -387,7 +386,7 @@ play_button_frame.place(x=1430, y=20)
 play_icon_image = PhotoImage(file="playButton.png")
 
 # Create the play button using the image
-play_button = Button(play_button_frame, image=play_icon_image, bg="white", command=play_music)
+play_button = Button(play_button_frame, image=play_icon_image, command=play_music)
 play_button.pack()
 
 ############################################### End ################################################
@@ -405,7 +404,7 @@ brake_button_frame.place(x=1200, y=670)
 brake_icon_image = PhotoImage(file="brakeIcon.png")
 
 # Create the play button using the image
-brake_button = Button(brake_button_frame, image=brake_icon_image, bg="white", command=stop)
+brake_button = Button(brake_button_frame, image=brake_icon_image, command=stop)
 brake_button.pack()
 
 ############################################### End ################################################
