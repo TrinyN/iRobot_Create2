@@ -342,7 +342,7 @@ def handle_enter_key_press(event):
         digit3 = int(input_text[2])
         digit4 = int(input_text[3])
 
-        # Convert the integers to hexadecimal
+        # Convert the integers to ASCII and then to hexadecimal
         hex1 = hex(digit1 + 48)
         hex2 = hex(digit2 + 48)
         hex3 = hex(digit3 + 48)
