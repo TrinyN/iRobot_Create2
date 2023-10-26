@@ -343,4 +343,21 @@ four_digit_input.bind("<Return>", handle_enter_key_press)
 keyboard_thread = threading.Thread(target=handle_keyboard_input)
 keyboard_thread.start()
 
+################MUSIC##################
+def play_music():
+    robot.playHappyBirthday()
+
+# Create a frame to hold the play button
+play_button_frame = Frame(root, bg="white", width=400, height=100)
+play_button_frame.place(x=1430, y=20)
+
+# Load the play button icon image
+play_icon_image = PhotoImage(file="playButton.png")
+
+# Create the play button using the image
+play_button = Button(play_button_frame, image=play_icon_image, bg="white", command=play_music)
+play_button.pack()
+
+######################################
+
 root.mainloop()
