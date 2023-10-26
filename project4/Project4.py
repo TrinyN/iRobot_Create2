@@ -360,10 +360,14 @@ def handle_enter_key_press(event):
 
 # Create a frame to surround the 4 digit input; Adj parameters as needed
 four_digit_frame = Frame(root, bg="white", width=400, height=100)
-four_digit_frame.place(x = 30, y = 250)
+four_digit_frame.place(x = 30, y = 150)
+
+# Create a label to hold all of the color buttons
+entry_label = Label(four_digit_frame, text="4 Digit ASCII LED", pady = 5, bg="white", font=("Georgia", 16))
+entry_label.pack()
 
 # Create an entry box to take in input
-four_digit_input = Entry(four_digit_frame, width=4, font=("Georgia", 30), \
+four_digit_input = Entry(four_digit_frame, width=11, font=("Georgia", 17), \
                         bg="black", fg="white", insertbackground="white")
 four_digit_input.pack(side=LEFT, padx=10)
 
