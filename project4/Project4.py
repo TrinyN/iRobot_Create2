@@ -18,15 +18,15 @@ import tkinter
 from tkinter import *
 from functools import partial
 import threading
+import re
 from PIL import Image, ImageTk
 import keyboard
 from Robot import Robot
-import re
 
 ################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
-robot = Robot("COM9")
+robot = Robot("COM13")
 robot.start()
 robot.safe()
 
@@ -115,105 +115,158 @@ LED_RED.pack(side=RIGHT, padx=10)
 
 ############################################### End ################################################
 
-######################################### Movement Keys ############################################
+###################################### On-Screen Movement Keys #####################################
 
 # Create a frame to surround the wasd buttons
-wasd_frame = Frame(
-    root, bg="white", width=400, height=100
-)  # Adjust parameters as needed
-wasd_frame.place(x=30, y=640)
+wasd_frame = Frame(root, bg="white", width=400, height=400)  # Adjust parameters as needed
+wasd_frame.place(x = 30, y = 600)
 
 # Create a frame to hold the boost button
 boost_button_frame = Frame(root, bg="white", width=400, height=100)
-boost_button_frame.place(x=1430, y=670)
+boost_button_frame.place(x=1430, y=730)
 
 # Load the boost button icon image
 boost_icon_image = PhotoImage(file="boostIcon.png")
 
 def w_button_press():
+    """Method that handles the on-screen w key being pressed.
+    """
     robot.driveDirect(b"\x01", b"\x2C", b"\x01", b"\x2C")
-    print("w pressed")
-
-def a_button_press():
-    robot.driveDirect(b"\x00", b"\xC8", b"\xFF", b"\x38")
-    print("a pressed")
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_N)
+    print("Driving Forward...")
 
 def s_button_press():
+    """Method that handles the on-screen s key being pressed.
+    """
     robot.driveDirect(b"\xFF", b"\x38", b"\xFF", b"\x38")
-    print("s pressed")
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_S)
+    print("Driving Backwards...")
+
+def a_button_press():
+    """Method that handles the on-screen a key being pressed.
+    """
+    robot.driveDirect(b"\x00", b"\xC8", b"\xFF", b"\x38")
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_W)
+    print("Driving Left...")
 
 def d_button_press():
+    """Method that handles the on-screen d key being pressed.
+    """
     robot.driveDirect(b"\xFF", b"\x38", b"\x00", b"\xC8")
-    print("d pressed")
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_E)
+    print("Driving Right...")
+
+def wa_button_press():
+    """Method that handles the on-screen wa key being pressed.
+    """
+    robot.driveDirect(b'\x01', b'\x5E', b'\x00', b'\xFA')
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_NW)
+    print("W and A Driving...")
+
+def wd_button_press():
+    """Method that handles the on-screen wd key being pressed.
+    """
+    robot.driveDirect(b'\x00', b'\xFA', b'\x01', b'\x5E')
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_NE)
+    print("W and D Driving...")
+
+def sa_button_press():
+    """Method that handles the on-screen sa key being pressed.
+    """
+    robot.driveDirect(b'\xFE', b'\xA2', b'\xFF', b'\x06')
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_SW)
+    print("S and A Driving...")
+
+def sd_button_press():
+    """Method that handles the on-screen sd key being pressed.
+    """
+    robot.driveDirect(b'\xFF', b'\x06', b'\xFE', b'\xA2')
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_SE)
+    print("S and D Driving...")
 
 def button_release():
+    """Method that handles any on-screen buttons being released.
+    """
     robot.driveDirect(b"\x00", b"\x00", b"\x00", b"\x00")
-    print("Stop")
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_N)
+    print("Stop!")
 
-# Create buttons with text labels
-w_button = Button(wasd_frame, text="W", width=6, height=3)
-a_button = Button(wasd_frame, text="A", width=6, height=3)
-s_button = Button(wasd_frame, text="S", width=6, height=3)
-d_button = Button(wasd_frame, text="D", width=6, height=3)
-boost_button = Button(
-    boost_button_frame, image=boost_icon_image, command=lambda: handle_input(" ")
-)
-
-w_button.bind("<ButtonPress>", lambda event: w_button_press())
-w_button.bind("<ButtonRelease>", lambda event: button_release())
-
-a_button.bind("<ButtonPress>", lambda event: a_button_press())
-a_button.bind("<ButtonRelease>", lambda event: button_release())
-
-s_button.bind("<ButtonPress>", lambda event: s_button_press())
-s_button.bind("<ButtonRelease>", lambda event: button_release())
-
-d_button.bind("<ButtonPress>", lambda event: d_button_press())
-d_button.bind("<ButtonRelease>", lambda event: button_release())
-
-# Create the boost button using the image
-boost_button.pack()
-
-# Position buttons to resemble a keyboard layout
-w_button.grid(row=0, column=1, padx=10)
-a_button.grid(row=1, column=0, pady=10)
-s_button.grid(row=1, column=1, pady=10)
-d_button.grid(row=1, column=2, pady=10)
-
-def handle_input(key):
-    """Method that handles the user clicking on the on-screen WASD buttons.
+def boost_button_press(key):
+    """Method that handles the user clicking on the on-screen boost buttons.
         NOTE: This does not allow the robot as many degrees of movement as the keyboard.
 
     Args:
         key (str):                      Key chosen on-screen
     """
-    if key == 'W':
-        robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
-        canvas.delete(canvas.find_closest(770,440))
-        canvas.create_image(770,440,image=roombaPic_N)
-        print("Driving Forward...")
-    elif key == 'S':
-        robot.driveDirect(b'\xFF', b'\x38', b'\xFF', b'\x38')
-        canvas.delete(canvas.find_closest(770,440))
-        canvas.create_image(770,440,image=roombaPic_S)
-        print("Driving Backwards...")
-    elif key == 'A':
-        robot.driveDirect(b'\x00', b'\xC8', b'\xFF', b'\x38') # Rotate counter-clockwise
-        canvas.delete(canvas.find_closest(770,440))
-        canvas.create_image(770,440,image=roombaPic_W)
-        print("Turning Left...")
-    elif key == 'D':
-        robot.driveDirect(b'\xFF', b'\x38', b'\x00', b'\xC8') # Rotate clockwise
-        canvas.delete(canvas.find_closest(770,440))
-        canvas.create_image(770,440,image=roombaPic_E)
-        print("Turning Right...")
-
-    elif key == " ":
-        robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-        # robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+    if key == " ":
+        # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
+        robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
         canvas.delete(canvas.find_closest(770,440))
         canvas.create_image(770,440,image=roombaPic_N)
         print("Boosting!")
+
+# Create buttons with text labels
+w_button = Button(wasd_frame, text="W", width=8, height=4)
+a_button = Button(wasd_frame, text="A", width=8, height=4)
+s_button = Button(wasd_frame, text="S", width=8, height=4)
+d_button = Button(wasd_frame, text="D", width=8, height=4)
+wa_button = Button(wasd_frame, text=" ", width=8, height=4)
+wd_button = Button(wasd_frame, text=" ", width=8, height=4)
+sa_button = Button(wasd_frame, text=" ", width=8, height=4)
+sd_button = Button(wasd_frame, text=" ", width=8, height=4)
+boost_button = Button(
+    boost_button_frame, image=boost_icon_image, command=boost_button_press(" ") # No lambda?
+)
+
+w_button.bind("<ButtonPress>", lambda event: w_button_press())
+w_button.bind("<ButtonRelease>", lambda event: button_release())
+
+s_button.bind("<ButtonPress>", lambda event: s_button_press())
+s_button.bind("<ButtonRelease>", lambda event: button_release())
+
+a_button.bind("<ButtonPress>", lambda event: a_button_press())
+a_button.bind("<ButtonRelease>", lambda event: button_release())
+
+d_button.bind("<ButtonPress>", lambda event: d_button_press())
+d_button.bind("<ButtonRelease>", lambda event: button_release())
+
+wa_button.bind("<ButtonPress>", lambda event: wa_button_press())
+wa_button.bind("<ButtonRelease>", lambda event: button_release())
+
+wd_button.bind("<ButtonPress>", lambda event: wd_button_press())
+wd_button.bind("<ButtonRelease>", lambda event: button_release())
+
+sa_button.bind("<ButtonPress>", lambda event: sa_button_press())
+sa_button.bind("<ButtonRelease>", lambda event: button_release())
+
+sd_button.bind("<ButtonPress>", lambda event: sd_button_press())
+sd_button.bind("<ButtonRelease>", lambda event: button_release())
+
+# Create the boost button using the image
+boost_button.pack()
+
+# Position buttons to resemble a keyboard layout
+w_button.grid(row=0, column=1, padx=5)
+s_button.grid(row=2, column=1, pady=0)
+a_button.grid(row=1, column=0, pady=5)
+d_button.grid(row=1, column=2, pady=5)
+wa_button.grid(row=0, column=0, pady=0)
+wd_button.grid(row=0, column=2, pady=0)
+sa_button.grid(row=2, column=0, pady=0)
+sd_button.grid(row=2, column=2, pady=0)
+
+############################################### End ################################################
+
+###################################### Keyboard Movement Keys ######################################
 
 W = FALSE
 A = FALSE
@@ -238,7 +291,7 @@ def handle_keyboard_input():
         ):
             if not W:
                 W = True
-                robot.driveDirect(b'\x01', b'\2C', b'\x01', b'\x2C')
+                robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Driving Forward...")
@@ -333,8 +386,8 @@ def handle_keyboard_input():
         elif keyboard.is_pressed(" "):
             if not SPACE:
                 SPACE = True
-                robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-                # robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+                # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
+                robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Boosting...")
@@ -426,28 +479,8 @@ play_button_frame.place(x=1430, y=20)
 play_icon_image = PhotoImage(file="playButton.png")
 
 # Create the play button using the image
-play_button = Button(play_button_frame, image=play_icon_image, command=play_music)
+play_button = Button(play_button_frame, image=play_icon_image, bg="white", command=play_music)
 play_button.pack()
-
-############################################### End ################################################
-
-############################################## Brake ###############################################
-
-def stop():
-    """Method to set the speed of the wheels to 0 in order to stop moving.
-    """
-    robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
-
-# Create a frame to hold the brake button
-brake_button_frame = Frame(root, bg="white", width=400, height=100)
-brake_button_frame.place(x=1200, y=670)
-
-# Load the brake button icon image
-brake_icon_image = PhotoImage(file="brakeIcon.png")
-
-# Create the brake button using the image
-brake_button = Button(brake_button_frame, image=brake_icon_image, command=stop)
-brake_button.pack()
 
 ############################################### End ################################################
 
