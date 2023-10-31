@@ -152,7 +152,7 @@ def handle_input(key):
         key (str):                      Key chosen on-screen
     """
     if key == 'W':
-        robot.driveDirect(b'\x01', b'\2C', b'\x01', b'\x2C')
+        robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
         canvas.delete(canvas.find_closest(770,440))
         canvas.create_image(770,440,image=roombaPic_N)
         print("Driving Forward...")
