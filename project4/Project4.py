@@ -402,14 +402,14 @@ def stop():
     """
     robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
 
-# Create a frame to hold the play button
+# Create a frame to hold the brake button
 brake_button_frame = Frame(root, bg="white", width=400, height=100)
 brake_button_frame.place(x=1200, y=670)
 
-# Load the play button icon image
+# Load the brake button icon image
 brake_icon_image = PhotoImage(file="brakeIcon.png")
 
-# Create the play button using the image
+# Create the brake button using the image
 brake_button = Button(brake_button_frame, image=brake_icon_image, command=stop)
 brake_button.pack()
 
