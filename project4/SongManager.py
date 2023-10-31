@@ -6,6 +6,9 @@ Last Updated:       10/29/2023
 Purpose:            This file contains data and getters related to Triny Nguyen's 
                     Happy Birthday song originally designed to play on the 
                     iRobot Create 2.
+                    
+                    NOTE: This class is not in use. The idea was scrapped, though it
+                    may be useful in the future.
 
 Sample Run:         c:/Users/escot/vscode-workspace/Song_Manager.py
 
