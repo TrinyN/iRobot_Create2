@@ -118,8 +118,10 @@ LED_RED.pack(side=RIGHT, padx=10)
 ######################################### Movement Keys ############################################
 
 # Create a frame to surround the wasd buttons
-wasd_frame = Frame(root, bg="white", width=400, height=100)  # Adjust parameters as needed
-wasd_frame.place(x = 30, y = 640)
+wasd_frame = Frame(
+    root, bg="white", width=400, height=100
+)  # Adjust parameters as needed
+wasd_frame.place(x=30, y=640)
 
 # Create a frame to hold the boost button
 boost_button_frame = Frame(root, bg="white", width=400, height=100)
@@ -128,12 +130,46 @@ boost_button_frame.place(x=1430, y=670)
 # Load the boost button icon image
 boost_icon_image = PhotoImage(file="boostIcon.png")
 
+def w_button_press():
+    robot.driveDirect(b"\x01", b"\x2C", b"\x01", b"\x2C")
+    print("w pressed")
+
+def a_button_press():
+    robot.driveDirect(b"\x00", b"\xC8", b"\xFF", b"\x38")
+    print("a pressed")
+
+def s_button_press():
+    robot.driveDirect(b"\xFF", b"\x38", b"\xFF", b"\x38")
+    print("s pressed")
+
+def d_button_press():
+    robot.driveDirect(b"\xFF", b"\x38", b"\x00", b"\xC8")
+    print("d pressed")
+
+def button_release():
+    robot.driveDirect(b"\x00", b"\x00", b"\x00", b"\x00")
+    print("Stop")
+
 # Create buttons with text labels
-w_button = Button(wasd_frame, text="W", command=lambda: handle_input('W'), width=6, height=3)
-a_button = Button(wasd_frame, text="A", command=lambda: handle_input('A'), width=6, height=3)
-s_button = Button(wasd_frame, text="S", command=lambda: handle_input('S'), width=6, height=3)
-d_button = Button(wasd_frame, text="D", command=lambda: handle_input('D'), width=6, height=3)
-boost_button = Button(boost_button_frame, image=boost_icon_image, command=lambda: handle_input(' '))
+w_button = Button(wasd_frame, text="W", width=6, height=3)
+a_button = Button(wasd_frame, text="A", width=6, height=3)
+s_button = Button(wasd_frame, text="S", width=6, height=3)
+d_button = Button(wasd_frame, text="D", width=6, height=3)
+boost_button = Button(
+    boost_button_frame, image=boost_icon_image, command=lambda: handle_input(" ")
+)
+
+w_button.bind("<ButtonPress>", lambda event: w_button_press())
+w_button.bind("<ButtonRelease>", lambda event: button_release())
+
+a_button.bind("<ButtonPress>", lambda event: a_button_press())
+a_button.bind("<ButtonRelease>", lambda event: button_release())
+
+s_button.bind("<ButtonPress>", lambda event: s_button_press())
+s_button.bind("<ButtonRelease>", lambda event: button_release())
+
+d_button.bind("<ButtonPress>", lambda event: d_button_press())
+d_button.bind("<ButtonRelease>", lambda event: button_release())
 
 # Create the boost button using the image
 boost_button.pack()
