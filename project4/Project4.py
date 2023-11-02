@@ -25,7 +25,7 @@ from Robot import Robot
 ################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
-robot = Robot("COM4")
+robot = Robot("COM10")
 robot.start()
 robot.safe()
 
@@ -35,7 +35,7 @@ root.title("Roomba")
 root.configure(background="white")
 root.geometry("1920x1080+0+0")
 root.resizable = FALSE
-root.state("zoomed")  # Automatically set to fullscreen
+root.state("zoomed")                               # Automatically set to fullscreen
 
 # Creating a frame for the canvas
 canvas_frame = Frame(root)
@@ -46,7 +46,7 @@ canvas = Canvas(canvas_frame, bg="white", width=1920, height=1080)
 canvas.pack()
 
 # Creating images at different angles
-pil_roombaPic_N = Image.open("create2sm.png")  # Pillow version of original image
+pil_roombaPic_N = Image.open("create2sm.png")      # Pillow version of original image
 pil_roombaPic_NE = pil_roombaPic_N.rotate(45)
 pil_roombaPic_E = pil_roombaPic_N.rotate(90)
 pil_roombaPic_SE = pil_roombaPic_N.rotate(135)
@@ -64,7 +64,7 @@ roombaPic_SW = ImageTk.PhotoImage(pil_roombaPic_SE)
 roombaPic_W = ImageTk.PhotoImage(pil_roombaPic_E)
 roombaPic_NW = ImageTk.PhotoImage(pil_roombaPic_NE)
 
-canvas.create_image(770, 440, image=roombaPic_N)  # Placing default image on canvas
+canvas.create_image(770, 440, image=roombaPic_N)   # Placing default image on canvas
 
 ############################################### End ################################################
 
@@ -253,11 +253,7 @@ sd_button.grid(row=2, column=2, pady=0)
 
 ###################################### Keyboard Movement Keys ######################################
 
-W = FALSE
-A = FALSE
-S = FALSE
-D = FALSE
-SPACE = FALSE
+W = A = S = D = SPACE = FALSE
 
 
 def handle_keyboard_input():
@@ -275,7 +271,6 @@ def handle_keyboard_input():
         ):
             if not W:
                 W = True
-                # robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
                 robot.driveDirect(b"\x02", b"\x58", b"\x02", b"\x58")
                 canvas.delete(canvas.find_closest(770, 440))
                 canvas.create_image(770, 440, image=roombaPic_N)
@@ -365,9 +360,6 @@ def handle_keyboard_input():
 
         # Boosting forwards
         elif keyboard.is_pressed(" "):
-            # if not SPACE:
-            # SPACE = True
-            # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
             robot.driveDirect(b"xFF", b"xC0", b"xFF", b"x51")
             canvas.delete(canvas.find_closest(770, 440))
             canvas.create_image(770, 440, image=roombaPic_N)
