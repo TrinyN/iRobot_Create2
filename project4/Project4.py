@@ -387,7 +387,7 @@ def handle_keyboard_input():
             # SPACE = True
             # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
             robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
-            canvzas.delete(canvas.find_closest(770,440))
+            canvas.delete(canvas.find_closest(770,440))
             canvas.create_image(770,440,image=roombaPic_N)
             print("Boosting...")
 
