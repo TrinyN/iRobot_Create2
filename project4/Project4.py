@@ -26,7 +26,7 @@ from Robot import Robot
 ################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
-robot = Robot("COM10")
+robot = Robot("COM4")
 robot.start()
 robot.safe()
 
@@ -34,9 +34,7 @@ robot.safe()
 root = Tk()
 root.title("Roomba")
 root.configure(background="white")
-root.minsize(1920, 1080)                                # Minimum width and height
-root.maxsize(1920, 1080)
-root.geometry("1920x1080+0+0")                          # Setting width, height, and starting point
+root.geometry("1530x824+0+0")   
 root.resizable=FALSE
 root.state('zoomed')                                    # Automatically set to fullscreen
 
@@ -290,7 +288,8 @@ def handle_keyboard_input():
         ):
             if not W:
                 W = True
-                robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
+                # robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
+                robot.driveDirect(b'\x02', b'\x58', b'\x02', b'\x58')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_N)
                 print("Driving Forward...")
@@ -343,7 +342,7 @@ def handle_keyboard_input():
             if not W or not A:
                 W = True
                 A = True
-                robot.driveDirect(b'\x01', b'\x5E', b'\x00', b'\xFA')
+                robot.driveDirect(b'\x02', b'\x58', b'\x01', b'\x5E')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NW)
                 print("W and A Driving...")
@@ -354,7 +353,7 @@ def handle_keyboard_input():
             if not W or not D:
                 W = True
                 D = True
-                robot.driveDirect(b'\x00', b'\xFA', b'\x01', b'\x5E')
+                robot.driveDirect(b'\x01', b'\x5E', b'\x02', b'\x58')
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NE)
                 print("W and D Driving...")
