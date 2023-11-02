@@ -26,7 +26,7 @@ from Robot import Robot
 ################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
-robot = Robot("COM13")
+robot = Robot("COM10")
 robot.start()
 robot.safe()
 
@@ -200,19 +200,18 @@ def button_release():
     canvas.create_image(770,440,image=roombaPic_N)
     print("Stop!")
 
-def boost_button_press(key):
+def boost_button_press():
     """Method that handles the user clicking on the on-screen boost buttons.
         NOTE: This does not allow the robot as many degrees of movement as the keyboard.
 
     Args:
         key (str):                      Key chosen on-screen
     """
-    if key == " ":
-        # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-        robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
-        canvas.delete(canvas.find_closest(770,440))
-        canvas.create_image(770,440,image=roombaPic_N)
-        print("Boosting!")
+    # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
+    robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+    canvas.delete(canvas.find_closest(770,440))
+    canvas.create_image(770,440,image=roombaPic_N)
+    print("Boosting!")
 
 # Create buttons with text labels
 w_button = Button(wasd_frame, text="W", width=8, height=4)
@@ -224,7 +223,7 @@ wd_button = Button(wasd_frame, text=" ", width=8, height=4)
 sa_button = Button(wasd_frame, text=" ", width=8, height=4)
 sd_button = Button(wasd_frame, text=" ", width=8, height=4)
 boost_button = Button(
-    boost_button_frame, image=boost_icon_image, command=boost_button_press(" ") # No lambda?
+    boost_button_frame, image=boost_icon_image, command=boost_button_press # No lambda?
 )
 
 w_button.bind("<ButtonPress>", lambda event: w_button_press())
@@ -359,7 +358,7 @@ def handle_keyboard_input():
                 canvas.delete(canvas.find_closest(770,440))
                 canvas.create_image(770,440,image=roombaPic_NE)
                 print("W and D Driving...")
-
+                
         # Moving backwards and left
         elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and \
             (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")):
@@ -384,13 +383,13 @@ def handle_keyboard_input():
 
         # Boosting forwards
         elif keyboard.is_pressed(" "):
-            if not SPACE:
-                SPACE = True
-                # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-                robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_N)
-                print("Boosting...")
+            # if not SPACE:
+            # SPACE = True
+            # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
+            robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
+            canvzas.delete(canvas.find_closest(770,440))
+            canvas.create_image(770,440,image=roombaPic_N)
+            print("Boosting...")
 
         # Finished with keyboard inputs
         elif keyboard.is_pressed("esc"):
