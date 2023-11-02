@@ -11,8 +11,7 @@ Purpose:            This file includes all of the code to create a window that a
 Sample Run:         c:/Users/escot/vscode-workspace/Project4.py
 
 Sample Output:      Connected!
-                    yellow
-                    Driving Forward...
+                    "Invalid Input"
 """
 import tkinter
 from tkinter import *
@@ -34,9 +33,9 @@ robot.safe()
 root = Tk()
 root.title("Roomba")
 root.configure(background="white")
-root.geometry("1530x824+0+0")   
-root.resizable=FALSE
-root.state('zoomed')                                    # Automatically set to fullscreen
+root.geometry("1920x1080+0+0")
+root.resizable = FALSE
+root.state("zoomed")  # Automatically set to fullscreen
 
 # Creating a frame for the canvas
 canvas_frame = Frame(root)
@@ -47,7 +46,7 @@ canvas = Canvas(canvas_frame, bg="white", width=1920, height=1080)
 canvas.pack()
 
 # Creating images at different angles
-pil_roombaPic_N = Image.open('create2sm.png')           # Pillow version of original image
+pil_roombaPic_N = Image.open("create2sm.png")  # Pillow version of original image
 pil_roombaPic_NE = pil_roombaPic_N.rotate(45)
 pil_roombaPic_E = pil_roombaPic_N.rotate(90)
 pil_roombaPic_SE = pil_roombaPic_N.rotate(135)
@@ -56,7 +55,7 @@ pil_roombaPic_SW = pil_roombaPic_N.rotate(225)
 pil_roombaPic_W = pil_roombaPic_N.rotate(270)
 pil_roombaPic_NW = pil_roombaPic_N.rotate(315)
 
-roombaPic_N = ImageTk.PhotoImage(pil_roombaPic_N)       # Convert all pillow images to PhotoImages
+roombaPic_N = ImageTk.PhotoImage(pil_roombaPic_N)  # Pillow images conv. to PhotoImages
 roombaPic_NE = ImageTk.PhotoImage(pil_roombaPic_NW)
 roombaPic_E = ImageTk.PhotoImage(pil_roombaPic_W)
 roombaPic_SE = ImageTk.PhotoImage(pil_roombaPic_SW)
@@ -65,7 +64,7 @@ roombaPic_SW = ImageTk.PhotoImage(pil_roombaPic_SE)
 roombaPic_W = ImageTk.PhotoImage(pil_roombaPic_E)
 roombaPic_NW = ImageTk.PhotoImage(pil_roombaPic_NE)
 
-canvas.create_image(770,440,image=roombaPic_N)          # Placing the default image on the canvas
+canvas.create_image(770, 440, image=roombaPic_N)  # Placing default image on canvas
 
 ############################################### End ################################################
 
@@ -78,32 +77,34 @@ def LED(color):
         color (str):                    Color returned by corresponding button
     """
     if color == "green":
-        robot.leds(b'\x04',b'\x00',b'\xFF')
-        print("green")
+        robot.leds(b"\x04", b"\x00", b"\xFF")
     elif color == "yellow":
-        robot.leds(b'\x04',b'\x05',b'\xFF')
-        print("yellow")
+        robot.leds(b"\x04", b"\x05", b"\xFF")
     elif color == "orange":
-        robot.leds(b'\x04',b'\x30',b'\xFF')
-        print("orange")
+        robot.leds(b"\x04", b"\x30", b"\xFF")
     elif color == "red":
-        robot.leds(b'\x04',b'\xFF',b'\xFF')
-        print("red")
+        robot.leds(b"\x04", b"\xFF", b"\xFF")
     else:
         print("error")
 
-# Create a frame to surround the color buttons
-color_frame = Frame(root, bg="white", width=400, height=100)  # Adjust parameters as needed
-color_frame.place(x = 30, y = 30)
+# Create a frame to surround the color buttons, adjust sizes as needed
+color_frame = Frame(root, bg="white", width=400, height=100)
+color_frame.place(x=30, y=30)
 
 # Create a label to hold all of the color buttons
-text = Label(color_frame, text="Clean/Power LED", pady = 5, bg="white", font=("Georgia", 16))
+text = Label(
+    color_frame, text="Clean/Power LED", pady=5, bg="white", font=("Georgia", 16)
+)
 text.pack()
 
 # Color buttons
 LED_GREEN = Button(color_frame, bg="green", text="    ", command=partial(LED, "green"))
-LED_YELLOW = Button(color_frame, bg="yellow", text="    ", command=partial(LED, "yellow"))
-LED_ORANGE = Button(color_frame, bg="orange", text="    ", command=partial(LED, "orange"))
+LED_YELLOW = Button(
+    color_frame, bg="yellow", text="    ", command=partial(LED, "yellow")
+)
+LED_ORANGE = Button(
+    color_frame, bg="orange", text="    ", command=partial(LED, "orange")
+)
 LED_RED = Button(color_frame, bg="red", text="    ", command=partial(LED, "red"))
 
 LED_GREEN.pack(side=LEFT, padx=10)
@@ -115,9 +116,9 @@ LED_RED.pack(side=RIGHT, padx=10)
 
 ###################################### On-Screen Movement Keys #####################################
 
-# Create a frame to surround the wasd buttons
-wasd_frame = Frame(root, bg="white", width=400, height=400)  # Adjust parameters as needed
-wasd_frame.place(x = 30, y = 600)
+# Create a frame to surround the wasd buttons, adjust sizes as needed
+wasd_frame = Frame(root, bg="white", width=400, height=400)
+wasd_frame.place(x=30, y=600)
 
 # Create a frame to hold the boost button
 boost_button_frame = Frame(root, bg="white", width=400, height=100)
@@ -126,90 +127,77 @@ boost_button_frame.place(x=1430, y=730)
 # Load the boost button icon image
 boost_icon_image = PhotoImage(file="boostIcon.png")
 
+
 def w_button_press():
-    """Method that handles the on-screen w key being pressed.
-    """
+    """Method that handles the on-screen w key being pressed."""
     robot.driveDirect(b"\x01", b"\x2C", b"\x01", b"\x2C")
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_N)
-    print("Driving Forward...")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_N)
+
 
 def s_button_press():
-    """Method that handles the on-screen s key being pressed.
-    """
+    """Method that handles the on-screen s key being pressed."""
     robot.driveDirect(b"\xFF", b"\x38", b"\xFF", b"\x38")
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_S)
-    print("Driving Backwards...")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_S)
+
 
 def a_button_press():
-    """Method that handles the on-screen a key being pressed.
-    """
+    """Method that handles the on-screen a key being pressed."""
     robot.driveDirect(b"\x00", b"\xC8", b"\xFF", b"\x38")
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_W)
-    print("Driving Left...")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_W)
+
 
 def d_button_press():
-    """Method that handles the on-screen d key being pressed.
-    """
+    """Method that handles the on-screen d key being pressed."""
     robot.driveDirect(b"\xFF", b"\x38", b"\x00", b"\xC8")
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_E)
-    print("Driving Right...")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_E)
+
 
 def wa_button_press():
-    """Method that handles the on-screen wa key being pressed.
-    """
-    robot.driveDirect(b'\x01', b'\x5E', b'\x00', b'\xFA')
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_NW)
-    print("W and A Driving...")
+    """Method that handles the on-screen wa key being pressed."""
+    robot.driveDirect(b"\x01", b"\x5E", b"\x00", b"\xFA")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_NW)
+
 
 def wd_button_press():
-    """Method that handles the on-screen wd key being pressed.
-    """
-    robot.driveDirect(b'\x00', b'\xFA', b'\x01', b'\x5E')
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_NE)
-    print("W and D Driving...")
+    """Method that handles the on-screen wd key being pressed."""
+    robot.driveDirect(b"\x00", b"\xFA", b"\x01", b"\x5E")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_NE)
+
 
 def sa_button_press():
-    """Method that handles the on-screen sa key being pressed.
-    """
-    robot.driveDirect(b'\xFE', b'\xA2', b'\xFF', b'\x06')
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_SW)
-    print("S and A Driving...")
+    """Method that handles the on-screen sa key being pressed."""
+    robot.driveDirect(b"\xFE", b"\xA2", b"\xFF", b"\x06")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_SW)
+
 
 def sd_button_press():
-    """Method that handles the on-screen sd key being pressed.
-    """
-    robot.driveDirect(b'\xFF', b'\x06', b'\xFE', b'\xA2')
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_SE)
-    print("S and D Driving...")
+    """Method that handles the on-screen sd key being pressed."""
+    robot.driveDirect(b"\xFF", b"\x06", b"\xFE", b"\xA2")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_SE)
+
 
 def button_release():
-    """Method that handles any on-screen buttons being released.
-    """
+    """Method that handles any on-screen buttons being released."""
     robot.driveDirect(b"\x00", b"\x00", b"\x00", b"\x00")
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_N)
-    print("Stop!")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_N)
+
 
 def boost_button_press():
-    """Method that handles the user clicking on the on-screen boost buttons.
-        NOTE: This does not allow the robot as many degrees of movement as the keyboard.
-
-    Args:
-        key (str):                      Key chosen on-screen
-    """
+    """Method that handles the user clicking on the on-screen boost buttons."""
     # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-    robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
-    canvas.delete(canvas.find_closest(770,440))
-    canvas.create_image(770,440,image=roombaPic_N)
-    print("Boosting!")
+    robot.driveDirect(b"xFF", b"xC0", b"xFF", b"x51")
+    canvas.delete(canvas.find_closest(770, 440))
+    canvas.create_image(770, 440, image=roombaPic_N)
+
 
 # Create buttons with text labels
 w_button = Button(wasd_frame, text="W", width=8, height=4)
@@ -221,7 +209,7 @@ wd_button = Button(wasd_frame, text=" ", width=8, height=4)
 sa_button = Button(wasd_frame, text=" ", width=8, height=4)
 sd_button = Button(wasd_frame, text=" ", width=8, height=4)
 boost_button = Button(
-    boost_button_frame, image=boost_icon_image, command=boost_button_press # No lambda?
+    boost_button_frame, image=boost_icon_image, command=boost_button_press
 )
 
 w_button.bind("<ButtonPress>", lambda event: w_button_press())
@@ -271,124 +259,118 @@ S = FALSE
 D = FALSE
 SPACE = FALSE
 
+
 def handle_keyboard_input():
     """Method that handles user's inputs of movement through the keyboard. The imported
-        keyboard module is used to track the user's inputs.
-        NOTE: There is more freedom of movement in using the keyboard. Specifically,
-            the user may now choose to move two directions at once, if they allow.
+    keyboard module is used to track the user's inputs.
     """
     global W, A, S, D, SPACE
     while True:
         # Driving forwards
         if (
-            (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and not \
-            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")) and not \
-            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")) and not \
-            (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
+            (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
+            and not (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
+            and not (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
+            and not (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
         ):
             if not W:
                 W = True
                 # robot.driveDirect(b'\x01', b'\x2C', b'\x01', b'\x2C')
-                robot.driveDirect(b'\x02', b'\x58', b'\x02', b'\x58')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_N)
-                print("Driving Forward...")
+                robot.driveDirect(b"\x02", b"\x58", b"\x02", b"\x58")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_N)
 
         # Driving backwards
         elif (
-            (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and not \
-            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")) and not \
-            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")) and not \
-            (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
+            (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
+            and not (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
+            and not (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
+            and not (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
         ):
             if not S:
                 S = True
-                robot.driveDirect(b'\xFF', b'\x38', b'\xFF', b'\x38')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_S)
-                print("Driving Backwards...")
+                robot.driveDirect(b"\xFF", b"\x38", b"\xFF", b"\x38")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_S)
 
         # Turning left
         elif (
-            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")) and not \
-            (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and not \
-            (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and not \
-            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
+            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
+            and not (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
+            and not (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
+            and not (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
         ):
             if not A:
                 A = True
-                robot.driveDirect(b'\x00', b'\xC8', b'\xFF', b'\x38')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_W)
-                print("Driving Left...")
+                robot.driveDirect(b"\x00", b"\xC8", b"\xFF", b"\x38")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_W)
 
         # Turning right
         elif (
-            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")) and not \
-            (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and not \
-            (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and not \
-            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
+            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow"))
+            and not (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow"))
+            and not (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow"))
+            and not (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow"))
         ):
             if not D:
                 D = True
-                robot.driveDirect(b'\xFF', b'\x38', b'\x00', b'\xC8')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_E)
-                print("Driving Right...")
+                robot.driveDirect(b"\xFF", b"\x38", b"\x00", b"\xC8")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_E)
 
         # Moving forward and left
-        elif (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and \
-            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")):
+        elif (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and (
+            keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")
+        ):
             if not W or not A:
                 W = True
                 A = True
-                robot.driveDirect(b'\x02', b'\x58', b'\x01', b'\x5E')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_NW)
-                print("W and A Driving...")
+                robot.driveDirect(b"\x02", b"\x58", b"\x01", b"\x5E")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_NW)
 
         # Mving forward and right
-        elif (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and \
-            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")):
+        elif (keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")) and (
+            keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")
+        ):
             if not W or not D:
                 W = True
                 D = True
-                robot.driveDirect(b'\x01', b'\x5E', b'\x02', b'\x58')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_NE)
-                print("W and D Driving...")
-                
+                robot.driveDirect(b"\x01", b"\x5E", b"\x02", b"\x58")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_NE)
+
         # Moving backwards and left
-        elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and \
-            (keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")):
+        elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and (
+            keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")
+        ):
             if not S or not A:
                 S = True
                 A = True
-                robot.driveDirect(b'\xFE', b'\xA2', b'\xFF', b'\x06')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_SW)
-                print("S and A Driving...")
+                robot.driveDirect(b"\xFE", b"\xA2", b"\xFF", b"\x06")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_SW)
 
         # Moving backwards and right
-        elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and \
-            (keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")):
+        elif (keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")) and (
+            keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")
+        ):
             if not S or not D:
                 S = True
                 D = True
-                robot.driveDirect(b'\xFF', b'\x06', b'\xFE', b'\xA2')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_SE)
-                print("S and D Driving...")
+                robot.driveDirect(b"\xFF", b"\x06", b"\xFE", b"\xA2")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_SE)
 
         # Boosting forwards
         elif keyboard.is_pressed(" "):
             # if not SPACE:
             # SPACE = True
             # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-            robot.driveDirect(b'xFF', b'xC0', b'xFF', b'x51')
-            canvas.delete(canvas.find_closest(770,440))
-            canvas.create_image(770,440,image=roombaPic_N)
-            print("Boosting...")
+            robot.driveDirect(b"xFF", b"xC0", b"xFF", b"x51")
+            canvas.delete(canvas.find_closest(770, 440))
+            canvas.create_image(770, 440, image=roombaPic_N)
 
         # Finished with keyboard inputs
         elif keyboard.is_pressed("esc"):
@@ -400,10 +382,10 @@ def handle_keyboard_input():
                 A = False
                 S = False
                 D = False
-                robot.driveDirect(b'\x00', b'\x00', b'\x00', b'\x00')
-                canvas.delete(canvas.find_closest(770,440))
-                canvas.create_image(770,440,image=roombaPic_N)
-                print("Stop!")
+                robot.driveDirect(b"\x00", b"\x00", b"\x00", b"\x00")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_N)
+
 
 keyboard_thread = threading.Thread(target=handle_keyboard_input)
 keyboard_thread.start()
@@ -418,11 +400,10 @@ def handle_enter_key_press(event):
     Args:
         event (str):                    The enter key
     """
-    input_text = four_digit_input.get()[:4]                 # Gets the first 4 characters
-    print("Enter key pressed. Input:", input_text)
+    input_text = four_digit_input.get()[:4]  # Gets first 4 characters
 
     # If the first 4 characters are all numbers, display LED
-    if re.search(r'\d{4}', input_text):
+    if re.search(r"\d{4}", input_text):
         # Convert the digits to integers
         digit1 = int(input_text[0])
         digit2 = int(input_text[1])
@@ -447,15 +428,23 @@ def handle_enter_key_press(event):
 
 # Create a frame to surround the 4 digit input; Adj parameters as needed
 four_digit_frame = Frame(root, bg="white", width=400, height=100)
-four_digit_frame.place(x = 30, y = 150)
+four_digit_frame.place(x=30, y=150)
 
 # Create a label to hold all of the color buttons
-entry_label = Label(four_digit_frame, text="4 Digit ASCII LED", pady = 5, bg="white", font=("Georgia", 16))
+entry_label = Label(
+    four_digit_frame, text="4 Digit ASCII LED", pady=5, bg="white", font=("Georgia", 16)
+)
 entry_label.pack()
 
 # Create an entry box to take in input
-four_digit_input = Entry(four_digit_frame, width=11, font=("Georgia", 17), \
-                        bg="black", fg="white", insertbackground="white")
+four_digit_input = Entry(
+    four_digit_frame,
+    width=11,
+    font=("Georgia", 17),
+    bg="black",
+    fg="white",
+    insertbackground="white",
+)
 four_digit_input.pack(side=LEFT, padx=10)
 
 four_digit_input.bind("<Return>", handle_enter_key_press)
@@ -465,9 +454,10 @@ four_digit_input.bind("<Return>", handle_enter_key_press)
 ############################################## Music ###############################################
 def play_music():
     """Method to play the music used within in the Robot class. In our case that
-        is the Happy Birthday song.
+    is the Happy Birthday song.
     """
     robot.playHappyBirthday()
+
 
 # Create a frame to hold the play button
 play_button_frame = Frame(root, bg="white", width=400, height=100)
@@ -477,7 +467,9 @@ play_button_frame.place(x=1430, y=20)
 play_icon_image = PhotoImage(file="playButton.png")
 
 # Create the play button using the image
-play_button = Button(play_button_frame, image=play_icon_image, bg="white", command=play_music)
+play_button = Button(
+    play_button_frame, image=play_icon_image, bg="white", command=play_music
+)
 play_button.pack()
 
 ############################################### End ################################################
