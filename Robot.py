@@ -3,7 +3,8 @@ Author:             Ethan Scott and Triny Nguyen
 Date Created:       10/5/2023
 Last Editted:       10/17/2023
 
-Purpose:            
+Purpose:            This file contains the robot class which allows an ease
+					of access for the connecting and commanding of the Create 2.
 
 Sample Input:       c:/Users/escot/vscode-workspace/Robot.py
 
@@ -13,7 +14,6 @@ Sample Output:  	Connected!
 import struct
 import serial
 import time
-# import create2Project2
 
 class Robot:
 	"""Class of Robot that includes all related and relevant methods
@@ -27,39 +27,40 @@ class Robot:
 	# Command HEX byte definitions
 	start_cmd					=  b'\x80'
 	safe_cmd					=  b'\x83'
+	full_cmd					=  b'\x84'
 	sensors_cmd					=  b'\x8E'
 	reset_cmd					=  b'\x07'
 	stop_cmd					=  b'\xAD'
 	buttons_cmd					=  b'\xA5'
-	drive_direct_cmd				=  b'\x91'
+	drive_direct_cmd			=  b'\x91'
 	drive_cmd					=  b'\x89'
-	leds_ascii_cmd					=  b'\xA4'
+	leds_ascii_cmd				=  b'\xA4'
 	leds_cmd					=  b'\x8B'
-	seek_dock_cmd					=  b'\x8F'
-	song_load_cmd					=  b'\x8C'
-	song_play_cmd					=  b'\x8D'
+	seek_dock_cmd				=  b'\x8F'
+	song_load_cmd				=  b'\x8C'
+	song_play_cmd				=  b'\x8D'
 
 	# Packet ID HEX byte definitions
-	wall_id					=  b'\x08'
+	wall_id						=  b'\x08'
 	bumpsAndWheels_id			=  b'\x07'
 	cliffLeft_id				=  b'\x09'
 	cliffFrontLeft_id			=  b'\x0A'
 	cliffFrontRight_id			=  b'\x0B'
 	cliffRight_id				=  b'\x0C'
 	virtualWall_id				=  b'\x0D'
-	buttons_id				=  b'\x12'
-	distance_id				=  b'\x13'
-	angle_id				=  b'\x14'
+	buttons_id					=  b'\x12'
+	distance_id					=  b'\x13'
+	angle_id					=  b'\x14'
 	chargingState_id			=  b'\x15'
-	voltage_id				=  b'\x16'
+	voltage_id					=  b'\x16'
 	temperature_id				=  b'\x18'
 	batteryCharge_id			=  b'\x19'
 	wallSignal_id				=  b'\x1B'
 	cliffLeftSignal_id			=  b'\x1C'
-	cliffFrontLeftSignal_id			=  b'\x1D'
-	cliffFrontRightSignal_id		=  b'\x1E'
+	cliffFrontLeftSignal_id		=  b'\x1D'
+	cliffFrontRightSignal_id	=  b'\x1E'
 	cliffRightSignal_id			=  b'\x1F'
-	
+
 	
 	def __init__(self, port):
 		"""This is a constructor that creates an instance of Robot by
@@ -79,6 +80,8 @@ class Robot:
 		self.serial_connection.close()
 		time.sleep(1)
 		self.serial_connection.open()
+
+		# self.song_manager = SongManager()
 
 	def sendCommand(self, input):
 		"""Method used to format sending a command to the robot using
@@ -132,6 +135,7 @@ class Robot:
 	def reset(self):
 		"""Reset command to reset the robot.
 		"""
+		
 		self.sendCommand(self.reset_cmd)
 		time.sleep(1)
 
@@ -140,6 +144,13 @@ class Robot:
 			Specifically, the robot will act until a sensor is triggered.
 		"""
 		self.sendCommand(self.safe_cmd)
+		time.sleep(0.5)
+
+	def full(self):
+		"""Safe command to put the robot into safe mode.
+			Specifically, the robot will act until a sensor is triggered.
+		"""
+		self.sendCommand(self.full_cmd)
 		time.sleep(0.5)
 
 	def seekDock(self):
@@ -173,6 +184,7 @@ class Robot:
 			leftWheelHighByte (bytes): 		Second left-wheel byte to be inputted.
 			leftWheelLowByte (bytes): 		First left-wheel byte to be inputted.
 		"""
+		print("drivedirecting")
 		self.sendCommand(self.drive_direct_cmd + \
 			rightWheelHighByte + rightWheelLowByte + \
 			leftWheelHighByte + leftWheelLowByte)
@@ -216,12 +228,8 @@ class Robot:
 	def playHappyBirthday(self):
 		"""Method that allows the user to play the Happy Birthday Song.
 		"""
-		
+
 		C_LOW = b"\x48"
-		A = b"\x51"
-		A_SHARP = b"\x52"
-		B = b"\x53"
-		C = b"\x54"
 		D = b"\x4A"
 		E = b"\x4C"
 		F = b"\x4D"
@@ -260,42 +268,6 @@ class Robot:
 			+ F
 			+ HALF_NOTE
 		)
-
-		VERSE_TWO = (
-			b"\x8C\x02\x0D"
-			+ C_LOW
-			+ QUARTER_BEAM
-			+ C_LOW
-			+ QUARTER_BEAM
-			+ C
-			+ QUARTER_NOTE
-			+ A
-			+ QUARTER_NOTE
-			+ F
-			+ QUARTER_NOTE
-			+ E
-			+ QUARTER_NOTE
-			+ D
-			+ HALF_NOTE
-			+ A_SHARP
-			+ QUARTER_BEAM
-			+ A_SHARP
-			+ QUARTER_BEAM
-			+ A
-			+ QUARTER_NOTE
-			+ F
-			+ QUARTER_NOTE
-			+ G
-			+ QUARTER_NOTE
-			+ F
-			+ HALF_NOTE
-		)
 		self.sendCommand(VERSE_ONE)
 		time.sleep(1.0)
-		self.sendCommand(VERSE_TWO)
-
-
 		self.sendCommand(b"\x8D\x01")
-		time.sleep(9.5)
-		self.sendCommand(b"\x8D\x02")
-
