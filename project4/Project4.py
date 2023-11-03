@@ -22,51 +22,7 @@ from PIL import Image, ImageTk
 import keyboard
 from Robot import Robot
 
-################################## Setting up the main window ######################################
-
-# Establish connection and prime robot
-robot = Robot("COM10")
-robot.start()
-robot.safe()
-
-# Creating a root widget (i.e. a window)
-root = Tk()
-root.title("Roomba")
-root.configure(background="white")
-root.geometry("1920x1080+0+0")
-root.resizable = FALSE
-root.state("zoomed")                               # Automatically set to fullscreen
-
-# Creating a frame for the canvas
-canvas_frame = Frame(root)
-canvas_frame.pack()
-
-# Create a canvas for the .png image (allows transparent background)
-canvas = Canvas(canvas_frame, bg="white", width=1920, height=1080)
-canvas.pack()
-
-# Creating images at different angles
-pil_roombaPic_N = Image.open("create2sm.png")      # Pillow version of original image
-pil_roombaPic_NE = pil_roombaPic_N.rotate(45)
-pil_roombaPic_E = pil_roombaPic_N.rotate(90)
-pil_roombaPic_SE = pil_roombaPic_N.rotate(135)
-pil_roombaPic_S = pil_roombaPic_N.rotate(180)
-pil_roombaPic_SW = pil_roombaPic_N.rotate(225)
-pil_roombaPic_W = pil_roombaPic_N.rotate(270)
-pil_roombaPic_NW = pil_roombaPic_N.rotate(315)
-
-roombaPic_N = ImageTk.PhotoImage(pil_roombaPic_N)  # Pillow images conv. to PhotoImages
-roombaPic_NE = ImageTk.PhotoImage(pil_roombaPic_NW)
-roombaPic_E = ImageTk.PhotoImage(pil_roombaPic_W)
-roombaPic_SE = ImageTk.PhotoImage(pil_roombaPic_SW)
-roombaPic_S = ImageTk.PhotoImage(pil_roombaPic_S)
-roombaPic_SW = ImageTk.PhotoImage(pil_roombaPic_SE)
-roombaPic_W = ImageTk.PhotoImage(pil_roombaPic_E)
-roombaPic_NW = ImageTk.PhotoImage(pil_roombaPic_NE)
-
-canvas.create_image(770, 440, image=roombaPic_N)   # Placing default image on canvas
-
-############################################### End ################################################
+W = A = S = D = SPACE = FALSE
 
 ########################################## LED Buttons #############################################
 def LED(color):
@@ -87,46 +43,9 @@ def LED(color):
     else:
         print("error")
 
-# Create a frame to surround the color buttons, adjust sizes as needed
-color_frame = Frame(root, bg="white", width=400, height=100)
-color_frame.place(x=30, y=30)
-
-# Create a label to hold all of the color buttons
-text = Label(
-    color_frame, text="Clean/Power LED", pady=5, bg="white", font=("Georgia", 16)
-)
-text.pack()
-
-# Color buttons
-LED_GREEN = Button(color_frame, bg="green", text="    ", command=partial(LED, "green"))
-LED_YELLOW = Button(
-    color_frame, bg="yellow", text="    ", command=partial(LED, "yellow")
-)
-LED_ORANGE = Button(
-    color_frame, bg="orange", text="    ", command=partial(LED, "orange")
-)
-LED_RED = Button(color_frame, bg="red", text="    ", command=partial(LED, "red"))
-
-LED_GREEN.pack(side=LEFT, padx=10)
-LED_YELLOW.pack(side=LEFT, padx=10)
-LED_ORANGE.pack(side=LEFT, padx=10)
-LED_RED.pack(side=RIGHT, padx=10)
-
 ############################################### End ################################################
 
 ###################################### On-Screen Movement Keys #####################################
-
-# Create a frame to surround the wasd buttons, adjust sizes as needed
-wasd_frame = Frame(root, bg="white", width=400, height=400)
-wasd_frame.place(x=30, y=600)
-
-# Create a frame to hold the boost button
-boost_button_frame = Frame(root, bg="white", width=400, height=100)
-boost_button_frame.place(x=1430, y=730)
-
-# Load the boost button icon image
-boost_icon_image = PhotoImage(file="boostIcon.png")
-
 
 def w_button_press():
     """Method that handles the on-screen w key being pressed."""
@@ -198,63 +117,9 @@ def boost_button_press():
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_N)
 
-
-# Create buttons with text labels
-w_button = Button(wasd_frame, text="W", width=8, height=4)
-a_button = Button(wasd_frame, text="A", width=8, height=4)
-s_button = Button(wasd_frame, text="S", width=8, height=4)
-d_button = Button(wasd_frame, text="D", width=8, height=4)
-wa_button = Button(wasd_frame, text=" ", width=8, height=4)
-wd_button = Button(wasd_frame, text=" ", width=8, height=4)
-sa_button = Button(wasd_frame, text=" ", width=8, height=4)
-sd_button = Button(wasd_frame, text=" ", width=8, height=4)
-boost_button = Button(
-    boost_button_frame, image=boost_icon_image, command=boost_button_press
-)
-
-w_button.bind("<ButtonPress>", lambda event: w_button_press())
-w_button.bind("<ButtonRelease>", lambda event: button_release())
-
-s_button.bind("<ButtonPress>", lambda event: s_button_press())
-s_button.bind("<ButtonRelease>", lambda event: button_release())
-
-a_button.bind("<ButtonPress>", lambda event: a_button_press())
-a_button.bind("<ButtonRelease>", lambda event: button_release())
-
-d_button.bind("<ButtonPress>", lambda event: d_button_press())
-d_button.bind("<ButtonRelease>", lambda event: button_release())
-
-wa_button.bind("<ButtonPress>", lambda event: wa_button_press())
-wa_button.bind("<ButtonRelease>", lambda event: button_release())
-
-wd_button.bind("<ButtonPress>", lambda event: wd_button_press())
-wd_button.bind("<ButtonRelease>", lambda event: button_release())
-
-sa_button.bind("<ButtonPress>", lambda event: sa_button_press())
-sa_button.bind("<ButtonRelease>", lambda event: button_release())
-
-sd_button.bind("<ButtonPress>", lambda event: sd_button_press())
-sd_button.bind("<ButtonRelease>", lambda event: button_release())
-
-# Create the boost button using the image
-boost_button.pack()
-
-# Position buttons to resemble a keyboard layout
-w_button.grid(row=0, column=1, padx=5)
-s_button.grid(row=2, column=1, pady=0)
-a_button.grid(row=1, column=0, pady=5)
-d_button.grid(row=1, column=2, pady=5)
-wa_button.grid(row=0, column=0, pady=0)
-wd_button.grid(row=0, column=2, pady=0)
-sa_button.grid(row=2, column=0, pady=0)
-sd_button.grid(row=2, column=2, pady=0)
-
 ############################################### End ################################################
 
-###################################### Keyboard Movement Keys ######################################
-
-W = A = S = D = SPACE = FALSE
-
+################################# Physical Keyboard Movement Keys ##################################
 
 def handle_keyboard_input():
     """Method that handles user's inputs of movement through the keyboard. The imported
@@ -378,13 +243,10 @@ def handle_keyboard_input():
                 canvas.delete(canvas.find_closest(770, 440))
                 canvas.create_image(770, 440, image=roombaPic_N)
 
-
-keyboard_thread = threading.Thread(target=handle_keyboard_input)
-keyboard_thread.start()
-
 ############################################### End ################################################
 
 ########################################### ASCII Digits ###########################################
+
 def handle_enter_key_press(event):
     """Method to track when the user presses enter to choose
         the AASCII LED digits they want. It uses the first four.
@@ -418,14 +280,158 @@ def handle_enter_key_press(event):
     else:
         print("Invalid Input")
 
+############################################### End ################################################
+
+############################################## Music ###############################################
+
+def play_music():
+    """Method to play the music used within in the Robot class. In our case that
+    is the Happy Birthday song.
+    """
+    robot.playHappyBirthday()
+
+############################################### End ################################################
+
+################################## Setting up the main window ######################################
+
+# Establish connection and prime robot
+robot = Robot("COM10")
+robot.start()
+robot.safe()
+
+# Creating a root widget (i.e. a window)
+root = Tk()
+root.title("Roomba")
+root.configure(background="white")
+root.geometry("1920x1080+0+0")
+root.resizable = FALSE
+root.state("zoomed")                               # Automatically set to fullscreen
+
+# Creating a frame for the canvas
+canvas_frame = Frame(root)
+canvas_frame.pack()
+
+# Create a canvas for the .png image (allows transparent background)
+canvas = Canvas(canvas_frame, bg="white", width=1920, height=1080)
+canvas.pack()
+
+# Creating images at different angles
+pil_roombaPic_N = Image.open("create2sm.png")      # Pillow version of original image
+pil_roombaPic_NE = pil_roombaPic_N.rotate(45)
+pil_roombaPic_E = pil_roombaPic_N.rotate(90)
+pil_roombaPic_SE = pil_roombaPic_N.rotate(135)
+pil_roombaPic_S = pil_roombaPic_N.rotate(180)
+pil_roombaPic_SW = pil_roombaPic_N.rotate(225)
+pil_roombaPic_W = pil_roombaPic_N.rotate(270)
+pil_roombaPic_NW = pil_roombaPic_N.rotate(315)
+
+roombaPic_N = ImageTk.PhotoImage(pil_roombaPic_N)  # Pillow images conv. to PhotoImages
+roombaPic_NE = ImageTk.PhotoImage(pil_roombaPic_NW)
+roombaPic_E = ImageTk.PhotoImage(pil_roombaPic_W)
+roombaPic_SE = ImageTk.PhotoImage(pil_roombaPic_SW)
+roombaPic_S = ImageTk.PhotoImage(pil_roombaPic_S)
+roombaPic_SW = ImageTk.PhotoImage(pil_roombaPic_SE)
+roombaPic_W = ImageTk.PhotoImage(pil_roombaPic_E)
+roombaPic_NW = ImageTk.PhotoImage(pil_roombaPic_NE)
+
+canvas.create_image(770, 440, image=roombaPic_N)   # Placing default image on canvas
+
+# Create a frame to surround the color buttons, adjust sizes as needed
+color_frame = Frame(root, bg="white", width=400, height=100)
+color_frame.place(x=30, y=30)
+
+# Create a label to hold all of the color buttons
+text = Label(
+    color_frame, text="Clean/Power LED", pady=5, bg="white", font=("Georgia", 16)
+)
+text.pack()
+
+# Color buttons
+LED_GREEN = Button(color_frame, bg="green", text="    ", command=partial(LED, "green"))
+LED_YELLOW = Button(
+    color_frame, bg="yellow", text="    ", command=partial(LED, "yellow")
+)
+LED_ORANGE = Button(
+    color_frame, bg="orange", text="    ", command=partial(LED, "orange")
+)
+LED_RED = Button(color_frame, bg="red", text="    ", command=partial(LED, "red"))
+
+LED_GREEN.pack(side=LEFT, padx=10)
+LED_YELLOW.pack(side=LEFT, padx=10)
+LED_ORANGE.pack(side=LEFT, padx=10)
+LED_RED.pack(side=RIGHT, padx=10)
+
+# Create a frame to surround the wasd buttons, adjust sizes as needed
+wasd_frame = Frame(root, bg="white", width=400, height=400)
+wasd_frame.place(x=30, y=600)
+
+# Create a frame to hold the boost button
+boost_button_frame = Frame(root, bg="white", width=400, height=100)
+boost_button_frame.place(x=1430, y=730)
+
+# Load the boost button icon image
+boost_icon_image = PhotoImage(file="boostIcon.png")
+
+# Create buttons with text labels
+w_button = Button(wasd_frame, text="W", width=8, height=4)
+a_button = Button(wasd_frame, text="A", width=8, height=4)
+s_button = Button(wasd_frame, text="S", width=8, height=4)
+d_button = Button(wasd_frame, text="D", width=8, height=4)
+wa_button = Button(wasd_frame, text=" ", width=8, height=4)
+wd_button = Button(wasd_frame, text=" ", width=8, height=4)
+sa_button = Button(wasd_frame, text=" ", width=8, height=4)
+sd_button = Button(wasd_frame, text=" ", width=8, height=4)
+boost_button = Button(
+    boost_button_frame, image=boost_icon_image, command=boost_button_press
+)
+
+w_button.bind("<ButtonPress>", lambda event: w_button_press())
+w_button.bind("<ButtonRelease>", lambda event: button_release())
+
+s_button.bind("<ButtonPress>", lambda event: s_button_press())
+s_button.bind("<ButtonRelease>", lambda event: button_release())
+
+a_button.bind("<ButtonPress>", lambda event: a_button_press())
+a_button.bind("<ButtonRelease>", lambda event: button_release())
+
+d_button.bind("<ButtonPress>", lambda event: d_button_press())
+d_button.bind("<ButtonRelease>", lambda event: button_release())
+
+wa_button.bind("<ButtonPress>", lambda event: wa_button_press())
+wa_button.bind("<ButtonRelease>", lambda event: button_release())
+
+wd_button.bind("<ButtonPress>", lambda event: wd_button_press())
+wd_button.bind("<ButtonRelease>", lambda event: button_release())
+
+sa_button.bind("<ButtonPress>", lambda event: sa_button_press())
+sa_button.bind("<ButtonRelease>", lambda event: button_release())
+
+sd_button.bind("<ButtonPress>", lambda event: sd_button_press())
+sd_button.bind("<ButtonRelease>", lambda event: button_release())
+
+# Create the boost button using the image
+boost_button.pack()
+
+# Position buttons to resemble a keyboard layout
+w_button.grid(row=0, column=1, padx=5)
+s_button.grid(row=2, column=1, pady=0)
+a_button.grid(row=1, column=0, pady=5)
+d_button.grid(row=1, column=2, pady=5)
+wa_button.grid(row=0, column=0, pady=0)
+wd_button.grid(row=0, column=2, pady=0)
+sa_button.grid(row=2, column=0, pady=0)
+sd_button.grid(row=2, column=2, pady=0)
+
+keyboard_thread = threading.Thread(target=handle_keyboard_input)
+keyboard_thread.start()
+
 # Create a frame to surround the 4 digit input; Adj parameters as needed
 four_digit_frame = Frame(root, bg="white", width=400, height=100)
 four_digit_frame.place(x=30, y=150)
 
 # Create a label to hold all of the color buttons
 entry_label = Label(
-    four_digit_frame, text="4 Digit ASCII LED", pady=5, bg="white", font=("Georgia", 16)
-)
+    four_digit_frame, text="4 Digit ASCII LED", pady=5, bg="white", font=("Georgia", 16))
 entry_label.pack()
 
 # Create an entry box to take in input
@@ -441,16 +447,6 @@ four_digit_input.pack(side=LEFT, padx=10)
 
 four_digit_input.bind("<Return>", handle_enter_key_press)
 
-############################################### End ################################################
-
-############################################## Music ###############################################
-def play_music():
-    """Method to play the music used within in the Robot class. In our case that
-    is the Happy Birthday song.
-    """
-    robot.playHappyBirthday()
-
-
 # Create a frame to hold the play button
 play_button_frame = Frame(root, bg="white", width=400, height=100)
 play_button_frame.place(x=1430, y=20)
@@ -464,8 +460,8 @@ play_button = Button(
 )
 play_button.pack()
 
-############################################### End ################################################
-
 root.mainloop()
+
+############################################### End ################################################
 
 ############################################ End Class #############################################
