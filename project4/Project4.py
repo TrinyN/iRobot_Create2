@@ -49,7 +49,7 @@ def LED(color):
 
 def w_button_press():
     """Method that handles the on-screen w key being pressed."""
-    robot.driveDirect(b"\x01", b"\x2C", b"\x01", b"\x2C")
+    robot.driveDirect(b"\x02", b"\x58", b"\x02", b"\x58")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_N)
 
@@ -77,14 +77,14 @@ def d_button_press():
 
 def wa_button_press():
     """Method that handles the on-screen wa key being pressed."""
-    robot.driveDirect(b"\x01", b"\x5E", b"\x00", b"\xFA")
+    robot.driveDirect(b"\x02", b"\x58", b"\x01", b"\x5E")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_NW)
 
 
 def wd_button_press():
     """Method that handles the on-screen wd key being pressed."""
-    robot.driveDirect(b"\x00", b"\xFA", b"\x01", b"\x5E")
+    robot.driveDirect(b"\x01", b"\x5E", b"\x02", b"\x58")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_NE)
 
@@ -225,9 +225,11 @@ def handle_keyboard_input():
 
         # Boosting forwards
         elif keyboard.is_pressed(" "):
-            robot.driveDirect(b"xFF", b"xC0", b"xFF", b"x51")
-            canvas.delete(canvas.find_closest(770, 440))
-            canvas.create_image(770, 440, image=roombaPic_N)
+            if not SPACE:
+                SPACE = True
+                robot.driveDirect(b"xFF", b"xC0", b"xFF", b"x51")
+                canvas.delete(canvas.find_closest(770, 440))
+                canvas.create_image(770, 440, image=roombaPic_N)
 
         # Finished with keyboard inputs
         elif keyboard.is_pressed("esc"):
@@ -239,6 +241,7 @@ def handle_keyboard_input():
                 A = False
                 S = False
                 D = False
+                SPACE = False
                 robot.driveDirect(b"\x00", b"\x00", b"\x00", b"\x00")
                 canvas.delete(canvas.find_closest(770, 440))
                 canvas.create_image(770, 440, image=roombaPic_N)
@@ -295,7 +298,7 @@ def play_music():
 ################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
-robot = Robot("COM10")
+robot = Robot("COM3")
 robot.start()
 robot.safe()
 
