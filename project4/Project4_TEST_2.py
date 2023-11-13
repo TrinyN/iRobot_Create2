@@ -20,6 +20,7 @@ import threading
 import re
 from PIL import Image, ImageTk
 import keyboard
+import time
 from Robot import Robot
 
 W = A = S = D = SPACE = FALSE
@@ -49,141 +50,189 @@ def LED(color):
 
 def w_button_press():
     """Method that handles the on-screen w key being pressed."""
-    robot.driveDirect(b"\x02", b"\x58", b"\x02", b"\x58")
+    robot.driveDirect(b"\x02\x58\x02\x58")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_N)
 
 
 def s_button_press():
     """Method that handles the on-screen s key being pressed."""
-    robot.driveDirect(b"\xFF", b"\x38", b"\xFF", b"\x38")
+    robot.driveDirect(b"\xFF\x38\xFF\x38")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_S)
 
 
 def a_button_press():
     """Method that handles the on-screen a key being pressed."""
-    robot.driveDirect(b"\x00", b"\xC8", b"\xFF", b"\x38")
+    robot.driveDirect(b"\x00\xC8\xFF\x38")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_W)
 
 
 def d_button_press():
     """Method that handles the on-screen d key being pressed."""
-    robot.driveDirect(b"\xFF", b"\x38", b"\x00", b"\xC8")
+    robot.driveDirect(b"\xFF\x38\x00\xC8")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_E)
 
 
 def wa_button_press():
     """Method that handles the on-screen wa key being pressed."""
-    robot.driveDirect(b"\x02", b"\x58", b"\x01", b"\x5E")
+    robot.driveDirect(b"\x02\x58\x01\x5E")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_NW)
 
 
 def wd_button_press():
     """Method that handles the on-screen wd key being pressed."""
-    robot.driveDirect(b"\x01", b"\x5E", b"\x02", b"\x58")
+    robot.driveDirect(b"\x01\x5E\x02\x58")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_NE)
 
 
 def sa_button_press():
     """Method that handles the on-screen sa key being pressed."""
-    robot.driveDirect(b"\xFE", b"\xA2", b"\xFF", b"\x06")
+    robot.driveDirect(b"\xFE\xA2\xFF\x06")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_SW)
 
 
 def sd_button_press():
     """Method that handles the on-screen sd key being pressed."""
-    robot.driveDirect(b"\xFF", b"\x06", b"\xFE", b"\xA2")
+    robot.driveDirect(b"\xFF\x06\xFE\xA2")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_SE)
 
 
 def button_release():
     """Method that handles any on-screen buttons being released."""
-    robot.driveDirect(b"\x00", b"\x00", b"\x00", b"\x00")
+    robot.driveDirect(b"\x00\x00\x00\x00")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_N)
 
 
 def boost_button_press():
     """Method that handles the user clicking on the on-screen boost buttons."""
-    # robot.driveDirect(b'\x01',b'\xF4',b'\x01',b'\xF4')
-    robot.driveDirect(b"xFF", b"xC0", b"xFF", b"x51")
+    robot.driveDirect(b"xFFxC0xFFx51")
     canvas.delete(canvas.find_closest(770, 440))
     canvas.create_image(770, 440, image=roombaPic_N)
 
 ############################################### End ################################################
 
 ################################# Physical Keyboard Movement Keys ##################################
-def get_command():
+
+
+# command_sent = False
+
+def get_kb_command():
+    """Method that maps a keyboard input, wasd- or arrow-based, to a specific driveDirect command.
+
+    Returns:
+        bytes:                          The wheel velocities, high and low, as one.
+    """
     w_pressed = keyboard.is_pressed("w") or keyboard.is_pressed("up arrow")
     a_pressed = keyboard.is_pressed("a") or keyboard.is_pressed("left arrow")
     s_pressed = keyboard.is_pressed("s") or keyboard.is_pressed("down arrow")
     d_pressed = keyboard.is_pressed("d") or keyboard.is_pressed("right arrow")
+    space_pressed = keyboard.is_pressed(" ")
 
-    if w_pressed and a_pressed:
+    # Moving forward and left
+    if (w_pressed and a_pressed):
         print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_NW)
-        return b"\x02", b"\x58", b"\x01", b"\x5E"
-        # return "wa"  # Driving diagonally forward-left
+        return b"\x02\x58\x01\x5E"
+    # Moving forward and left
     elif w_pressed and d_pressed:
         print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_NE)
-        return b"\x01", b"\x5E", b"\x02", b"\x58"
-        # return "wd"  # Driving diagonally forward-right
+        return b"\x01\x5E\x02\x58"
+    # Moving backwards and right
     elif s_pressed and a_pressed:
         print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_SW)
-        return b"\xFE", b"\xA2", b"\xFF", b"\x06"
-        # return "sa"  # Driving diagonally backward-left
+        return b"\xFE\xA2\xFF\x06"
+    # Moving backwards and right
     elif s_pressed and d_pressed:
         print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_SE)
-        return b"\xFF", b"\x06", b"\xFE", b"\xA2"
-        # return "sd"  # Driving diagonally backward-right
+        return b"\xFF\x06\xFE\xA2"
+    # Invalid: No movement
+    elif w_pressed and s_pressed:
+        canvas.delete(canvas.find_closest(770, 440))
+        canvas.create_image(770, 440, image=roombaPic_N)
+        return b"\x00\x00\x00\x00"
+    # Invalid: No movement 
+    elif a_pressed and d_pressed:
+        canvas.delete(canvas.find_closest(770, 440))
+        canvas.create_image(770, 440, image=roombaPic_N)
+        return b"\x00\x00\x00\x00"
+    # Moving forward
     elif w_pressed:
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_N)
-        # return b"\x02", b"\x58", b"\x02", b"\x58"
-        return "w"  # Driving forwards
+        return b"\x02\x58\x02\x58"
+    # Rotating left or counter-clockwise
     elif a_pressed:
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_W)
-        # return b"\x00", b"\xC8", b"\xFF", b"\x38"
-        return "a"  # Driving left
+        return b"\x00\xC8\xFF\x38"
+    # Moving backwards
     elif s_pressed:
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_S)
-        # return b"\xFF", b"\x38", b"\xFF", b"\x38"
-        return "s"  # Driving backward
+        return b"\xFF\x38\xFF\x38"
+    # Rotating right or clockwise
     elif d_pressed:
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_E)
-        # return b"\xFF", b"\x38", b"\x00", b"\xC8"
-        return "d"  # Driving right
+        return b"\xFF\x38\x00\xC8"
+    # Boosting
+    elif space_pressed:
+        canvas.delete(canvas.find_closest(770, 440))
+        canvas.create_image(770, 440, image=roombaPic_N)
+        return b"xFFxC0xFFx51" 
+    # Stop by default
     else:
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_N)
-        # return b"\x00", b"\x00", b"\x00", b"\x00"  # Default stop command
+        return b"\x00\x00\x00\x00"
 
-def on_press(event):
-    command = get_command()
-    robot.driveDirect(command)     # POSSIBLE PROBLEM: format of command. if issue: try one b"\..\....""
+def on_kb_press(event):
+    """Method that is tracking the keys pressed on the physical keyboard.
+
+    Args:
+        event (str):                    A key is pressed
+    """
+    command = get_kb_command()
+    robot.driveDirect(command)
     print("Key pressed:", event.name)
 
-def on_release(event):
-    command = get_command()
+    # global command_sent
+    # if not command_sent:
+    #     command = get_kb_command()
+    #     your_robot_drive_direct_function(command)
+    #     print("Key pressed:", event.name)
+    #     command_sent = True
+
+def on_kb_release(event):
+    """Method that is tracking the keys released on the physical keyboard.
+
+    Args:
+        event (str):                    A key is released
+    """
+    command = get_kb_command()
     robot.driveDirect(command)
     print("Key released:", event.name)
+
+    # global command_sent
+    # command = get_kb_command()
+    # your_robot_drive_direct_function(command)
+    # print("Key released:", event.name)
+    # command_sent = False
 
 ############################################### End ################################################
 
@@ -237,7 +286,7 @@ def play_music():
 ################################## Setting up the main window ######################################
 
 # Establish connection and prime robot
-robot = Robot("COM9")
+robot = Robot("COM13")
 robot.start()
 robot.safe()
 
@@ -364,25 +413,25 @@ wd_button.grid(row=0, column=2, pady=0)
 sa_button.grid(row=2, column=0, pady=0)
 sd_button.grid(row=2, column=2, pady=0)
 
-# keyboard_thread = threading.Thread(target=handle_keyboard_input)
-# keyboard_thread.start()
+keyboard.on_press_key("w", on_kb_press)
+keyboard.on_press_key("up_arrow", on_kb_press)
+keyboard.on_press_key("a", on_kb_press)
+keyboard.on_press_key("left_arrow", on_kb_press)
+keyboard.on_press_key("d", on_kb_press)
+keyboard.on_press_key("right_arrow", on_kb_press)
+keyboard.on_press_key("s", on_kb_press)
+keyboard.on_press_key("down_arrow", on_kb_press)
+keyboard.on_press_key(" ", on_kb_press)
 
-keyboard.on_press_key("w", on_press)
-keyboard.on_release_key("w", on_release)
-keyboard.on_press_key("a", on_press)
-keyboard.on_release_key("a", on_release)
-keyboard.on_press_key("d", on_press)
-keyboard.on_release_key("d", on_release)
-keyboard.on_press_key("s", on_press)
-keyboard.on_release_key("s", on_release)
-# keyboard.on_press_key("wa", on_press)       # Can't be used?
-# keyboard.on_release_key("wa", on_release)
-# keyboard.on_press_key("wd", on_press)
-# keyboard.on_release_key("wd", on_release)
-# keyboard.on_press_key("sa", on_press)
-# keyboard.on_release_key("sa", on_release)
-# keyboard.on_press_key("sd", on_press)
-# keyboard.on_release_key("sd", on_release)
+keyboard.on_release_key("w", on_kb_release)
+keyboard.on_release_key("up_arrow", on_kb_release)
+keyboard.on_release_key("a", on_kb_release)
+keyboard.on_release_key("left_arrow", on_kb_release)
+keyboard.on_release_key("d", on_kb_release)
+keyboard.on_release_key("right_arrow", on_kb_release)
+keyboard.on_release_key("s", on_kb_release)
+keyboard.on_release_key("down_arrow", on_kb_release)
+keyboard.on_release_key(" ", on_kb_release)
 
 # Create a frame to surround the 4 digit input; Adj parameters as needed
 four_digit_frame = Frame(root, bg="white", width=400, height=100)
