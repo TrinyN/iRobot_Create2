@@ -173,21 +173,16 @@ class Robot:
 			velocityHighByte + velocityLowByte + \
 			radiusHighByte + radiushLowByte)
 
-	def driveDirect(self, rightWheelHighByte, rightWheelLowByte, leftWheelHighByte, leftWheelLowByte):
+	def driveDirect(self, driveBytes):
 		"""Drive direct command that allows the user to control each of the robot's
 			wheels individually.
 			NOTE: This includes negative values of each input, using 2's complement.
 
 		Args:
-			rightWheelHighByte (bytes): 	Second right-wheel byte to be inputted.
-			rightWheelLowByte (bytes): 		First right-wheel byte to be inputted.
-			leftWheelHighByte (bytes): 		Second left-wheel byte to be inputted.
-			leftWheelLowByte (bytes): 		First left-wheel byte to be inputted.
+			driveBytes (bytes): 			All wheel bytes in one, with slashes, inputted.
 		"""
 		print("drivedirecting")
-		self.sendCommand(self.drive_direct_cmd + \
-			rightWheelHighByte + rightWheelLowByte + \
-			leftWheelHighByte + leftWheelLowByte)
+		self.sendCommand(self.drive_direct_cmd + driveBytes)
 
 	def leds(self, ledBits, powerColor, powerIntensity):
 		"""LEDs command that allows the user to control the LED light found in
