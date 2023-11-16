@@ -181,7 +181,6 @@ class Robot:
 		Args:
 			driveBytes (bytes): 			All wheel bytes in one, with slashes, inputted.
 		"""
-		print("drivedirecting")
 		self.sendCommand(self.drive_direct_cmd + driveBytes)
 
 	def leds(self, ledBits, powerColor, powerIntensity):
