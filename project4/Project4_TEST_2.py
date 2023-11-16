@@ -138,25 +138,21 @@ def get_kb_command():
 
     # Moving forward and left
     if (w_pressed and a_pressed):
-        print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_NW)
         return b"\x02\x58\x01\x5E"
     # Moving forward and left
     elif w_pressed and d_pressed:
-        print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_NE)
         return b"\x01\x5E\x02\x58"
     # Moving backwards and right
     elif s_pressed and a_pressed:
-        print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_SW)
         return b"\xFE\xA2\xFF\x06"
     # Moving backwards and right
     elif s_pressed and d_pressed:
-        print("diagonal")
         canvas.delete(canvas.find_closest(770, 440))
         canvas.create_image(770, 440, image=roombaPic_SE)
         return b"\xFF\x06\xFE\xA2"
@@ -209,14 +205,6 @@ def on_kb_press(event):
     """
     command = get_kb_command()
     robot.driveDirect(command)
-    print("Key pressed:", event.name)
-
-    # global command_sent
-    # if not command_sent:
-    #     command = get_kb_command()
-    #     your_robot_drive_direct_function(command)
-    #     print("Key pressed:", event.name)
-    #     command_sent = True
 
 def on_kb_release(event):
     """Method that is tracking the keys released on the physical keyboard.
@@ -226,13 +214,6 @@ def on_kb_release(event):
     """
     command = get_kb_command()
     robot.driveDirect(command)
-    print("Key released:", event.name)
-
-    # global command_sent
-    # command = get_kb_command()
-    # your_robot_drive_direct_function(command)
-    # print("Key released:", event.name)
-    # command_sent = False
 
 ############################################### End ################################################
 
