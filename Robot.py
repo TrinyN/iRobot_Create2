@@ -108,7 +108,7 @@ class Robot:
 			byte = struct.unpack("B", buttonState)[0]
 			binary = "{0:08b}".format(byte)
 
-			return "Binary: "+ binary
+			return binary
 
 		if howManyBytes == 2:
 			buttonState = self.serial_connection.read(1)
@@ -120,7 +120,7 @@ class Robot:
 			byte2 = struct.unpack("B", buttonState)[0]
 			lowByte = "{0:08b}".format(byte2)
 
-			return "Binary "+ highByte + "" + lowByte
+			return highByte + lowByte
 
 	def start(self):
 		"""Start command to prime the robot for actions.
@@ -219,6 +219,26 @@ class Robot:
 		self.sendCommand(self.song_load_cmd + songNumber + 'b\x00' + \
 			noteByte + noteLengthByte)
 		
+	def sense_oneByte(self, packetID):
+		"""One-byte sensor command to allow the user to send a command
+			to receive data from one of the robots sensors.
+
+		Args:
+			packetID (bytes): 				Chosen packet ID
+		"""
+		self.sendCommand(self.sensors_cmd + packetID)
+		return self.read(1)
+
+	def sense_twoByte(self, packetID):
+		"""Two-byte sensor command to allow the user to send a command
+			to receive data from one of the robots sensors.
+
+		Args:
+			packetID (bytes): 				Chosen packet ID
+		"""
+		self.sendCommand(self.sensors_cmd + packetID)
+		return self.read(2)
+	
 	def playHappyBirthday(self):
 		"""Method that allows the user to play the Happy Birthday Song.
 		"""
