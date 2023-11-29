@@ -41,12 +41,13 @@ robot.driveDirect(b"\x00\xC8\x00\xC8")
 currentLeftSpeed = int(200)
 currentRightSpeed = int(200)
 
+
 while (True):
     # get distance in int form
     distance = int(robot.sense_twoByte(b'\x1B'), 2)
     print(distance)
 
-    # change speed accordingly
+    # get error
     error = int(.1 * (reference - distance))
     print(error)
 
@@ -77,4 +78,5 @@ while (True):
 
     robot.driveDirect(rightSpeed + leftSpeed)
 
-    time.sleep(5)
+    time.sleep(1)
+
