@@ -42,45 +42,39 @@ currentLeftSpeed = int(200)
 currentRightSpeed = int(200)
 
 while (True):
-    # Get distance in int form
-    DISTANCE = int(robot.sense_twoByte(b'\x1B'), 2)
-    print(DISTANCE)
+    # get distance in int form
+    distance = int(robot.sense_twoByte(b'\x1B'), 2)
+    print(distance)
 
-    # Change speed accordingly
-    error = int(.1 * (REFERENCE - DISTANCE))
+    # change speed accordingly
+    error = int(.1 * (reference - distance))
     print(error)
 
-    # Change speeds according to error
+    # change speeds according to error
     currentLeftSpeed -= error
     currentRightSpeed += error
 
-    # Convert int speeds to hex
+    # convert int speeds to hex
     rightHex = hex(currentRightSpeed & 0xFFFF)
     leftHex = hex(currentLeftSpeed & 0xFFFF)
 
-    # Convert hex speeds to bytes, checking whether or not there is a high byte or not
-    # If right and left speeds need two bytes
-    if sys.getsizeof(rightHex) >= 55 and sys.getsizeof(leftHex) >= 55 :
+
+    # convert hex speeds to bytes, checking whether or not there is a high byte or not
+
+    # if right speed has high byte
+    if sys.getsizeof(rightHex) >= 54:
         rightSpeed = bytes([int(rightHex[2:4], 16), int(rightHex[4:], 16)])
-        leftSpeed = bytes([int(leftHex[2:4], 16), int(leftHex[4:], 16)])
-        robot.driveDirect(rightSpeed + leftSpeed)
-
-    # If only right speed needs two bytes
-    elif sys.getsizeof(rightHex) >= 55 and sys.getsizeof(leftHex) < 55 :
-        rightSpeed = bytes([int(rightHex[2:4], 16), int(rightHex[4:], 16)])
-        leftSpeed = bytes([int(leftHex, 16)])
-        robot.driveDirect(rightSpeed + b"\x00" + leftSpeed)
-
-    # If only left speed needs two bytes
-    elif sys.getsizeof(rightHex) < 55 and sys.getsizeof(leftHex) >= 55 :
-        rightSpeed = bytes([int(rightHex, 16)])
-        leftSpeed = bytes([int(leftHex[2:4], 16), int(leftHex[4:], 16)])
-        robot.driveDirect(b"\x00" + rightSpeed + leftSpeed)
-
-    # If right and left speeds need only one byte
+    # else make high byte 0
     else:
-        rightSpeed = bytes([int(rightHex, 16)])
-        leftSpeed = bytes([int(leftHex, 16)])
-        robot.driveDirect(b"\x00" + rightSpeed + b"\x00" + leftSpeed)
+        rightSpeed = b"\x00" + bytes([int(rightHex, 16)])
+
+    # if left speed has high byte
+    if sys.getsizeof(leftHex) >= 54:
+        leftSpeed = bytes([int(leftHex[2:4], 16), int(leftHex[4:], 16)])
+    # else make high byte 0
+    else:
+        leftSpeed = b"\x00" + bytes([int(leftHex, 16)])
+
+    robot.driveDirect(rightSpeed + leftSpeed)
 
     time.sleep(5)
