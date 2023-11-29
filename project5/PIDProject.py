@@ -19,10 +19,8 @@ Sample Input:       c:/Users/escot/vscode-workspace/PIDProject.py
 Sample Output:  	300
                     100
 """
-import struct
 import time
 import sys
-import serial
 from Robot import Robot
 
 # Establishing the connection with the robot by instantiation
