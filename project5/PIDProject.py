@@ -32,7 +32,6 @@ robot.safe()
 
 # Constants to be used for sensing the wall and driving accordingly
 REFERENCE = int(200)
-DISTANCE = int(300)
 
 # Initially drive with 200 speed
 robot.driveDirect(b"\x00\xC8\x00\xC8")
@@ -41,14 +40,13 @@ robot.driveDirect(b"\x00\xC8\x00\xC8")
 currentLeftSpeed = int(200)
 currentRightSpeed = int(200)
 
-
 while (True):
     # get distance in int form
     distance = int(robot.sense_twoByte(b'\x1B'), 2)
     print(distance)
 
     # get error
-    error = int(.1 * (reference - distance))
+    error = int(.1 * (REFERENCE - distance))
     print(error)
 
     # change speeds according to error
